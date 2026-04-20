@@ -1,0 +1,169 @@
+一、首页 (https://fnosp.dustinky.com/products/tunnel)
+Cloudflare Tunnel
+飞牛 fnOS 专用 Cloudflare Tunnel 插件
+产品简介
+Cloudflare Tunnel 是飞牛 fnOS 系统中的内网穿透应用，通过安全隧道将内网服务（NAS、Web 面板、智能家居等）发布至互联网，无需公网 IP、无需端口映射，全程加密、隐藏真实 IP、防 DDoS 攻击。
+核心特性
+无公网 IP 可用：家用宽带、动态 IP 环境均可使用
+安全加密：流量经 Cloudflare 边缘节点加密传输
+隐藏真实 IP：不暴露家庭公网地址，降低攻击风险
+一键部署：fnOS 应用内一键安装、一键连接
+多服务支持：同时映射多个内网端口与服务
+自动 HTTPS：免费证书，自动开启 HTTPS 访问
+当前状态
+运行中
+进程 ID：[系统实时显示]
+运行时长：[系统实时显示]
+系统架构：[系统实时显示]
+导航菜单
+快速开始
+账号与权限配置
+管理与链接配置
+状态与排障
+高级设置
+更新日志
+二、快速开始 (https://fnosp.dustinky.com/products/tunnel/getting-started)
+Getting Started
+快速开始
+几步完成从配置到通过域名访问你的内网服务。
+快速开始
+几步完成从配置到通过域名访问你的内网服务。
+Cloudflare Tunnel 是 fnOS 上的一个 “内网穿透 / 反向代理” 应用。它让你把 NAS、Web 面板、Home Assistant 等内网服务安全地通过域名访问，不用开端口、不用公网 IP。
+开始前准备
+一个 Cloudflare 账号
+域名已接入 Cloudflare（若要使用自定义域名）
+目标内网服务能从 fnOS 设备访问
+三步上手
+账户配置 → 填写并保存 Cloudflare 账号 ID 与 API 令牌
+详见 账号与权限配置
+Tunnel 列表 → 新建一个 Tunnel 并点击 “连接”
+配置链接 → 添加 “域名 → 服务地址” 规则，保存后用域名访问内网服务
+详见 管理与链接配置
+如果连接不成功或访问失败，请看 状态与排障。
+三、账号与权限配置
+账号与权限配置
+Account & Permissions
+获取 Cloudflare 账号 ID
+登录 Cloudflare 控制台（dash.cloudflare.com）
+右上角头像 → 我的个人资料
+页面底部 “账户 ID”：复制 32 位字符串
+创建 API 令牌
+进入 Cloudflare 控制台 → 我的个人资料 → API 令牌
+点击 “创建令牌”
+选择模板：“Zone:Read, DNS:Edit, Tunnel:Edit”
+权限配置：
+Account → Cloudflare Tunnel → Edit
+Zone → DNS → Edit
+Zone → Zone → Read
+有效期：永久（推荐）
+客户端 IP 地址：不限
+生成令牌 → 复制保存（仅显示一次）
+在 fnOS 中配置
+打开 Cloudflare Tunnel 应用
+进入 “账户设置”
+粘贴 Account ID、API Token
+点击 “保存并验证”
+验证成功后，即可创建隧道
+常见问题
+验证失败：检查令牌权限、有效期、Account ID 是否正确
+权限不足：重新创建令牌，确保包含 Tunnel:Edit、DNS:Edit
+令牌泄露：立即在 Cloudflare 后台删除旧令牌，生成新令牌
+四、管理与链接配置
+管理与链接配置
+Management & Routing
+创建隧道
+进入 Tunnel 列表
+点击 “新建隧道”
+输入隧道名称（如：home-nas）
+选择运行架构（自动识别）
+保存 → 点击 “连接”
+状态变为 “健康” 即连接成功
+配置域名映射（Public Hostname）
+进入隧道 → “公共主机名”
+点击 “添加公共主机名”
+子域名：如 nas、drive、ha
+域名：选择已接入 Cloudflare 的主域名
+服务类型：HTTP / HTTPS
+服务 URL：内网地址（如 http://192.168.1.100:5000）
+保存配置
+等待 1–3 分钟 DNS 生效
+批量配置示例
+nas.example.com → http://192.168.1.100:5000 (fnOS 面板)
+drive.example.com → http://192.168.1.100:8080 (文件管理)
+ha.example.com → http://192.168.1.101:8123 (Home Assistant)
+访问方式
+配置完成后直接浏览器访问：
+https://nas.example.com
+自动 HTTPS，无需额外证书
+五、状态与排障
+状态与排障
+Status & Troubleshooting
+状态说明
+健康（Healthy）：隧道正常运行、连接稳定
+降级（Degraded）：连接不稳定、网络波动
+断开（Down）：隧道离线、未连接
+日志查看
+进入隧道详情
+点击 “日志”
+查看实时连接、请求、错误信息
+常见问题与解决
+1. 隧道无法连接
+检查 fnOS 网络是否能访问外网
+检查 Account ID、API Token 是否正确
+检查 Cloudflare 账号是否欠费 / 冻结
+重启隧道：停止 → 启动
+重启 fnOS 网络服务
+2. 域名无法访问
+等待 DNS 生效（最长 5 分钟）
+检查域名是否已激活 Cloudflare 橙色云
+检查内网服务是否正常运行
+检查服务 URL 协议（HTTP/HTTPS）与端口
+清空浏览器缓存或使用隐私模式访问
+3. 访问速度慢
+切换 Cloudflare 网络线路（默认自动）
+关闭 “开发模式”
+内网服务使用有线网络（不建议 Wi-Fi）
+检查 fnOS 上行带宽
+4. 证书错误 / 不安全提示
+等待自动证书颁发（约 1–5 分钟）
+确认域名 DNS 为 Cloudflare 代理模式
+重启隧道重新触发证书申请
+六、高级设置
+高级设置
+Advanced Settings
+启动参数
+--protocol http2 /quic：切换隧道协议
+--loglevel info /debug：日志级别
+--no-autoupdate：禁用自动更新
+网络优化
+协议选择：HTTP2（兼容）/ QUIC（速度优先）
+连接超时：默认 30s
+心跳间隔：默认 5s
+最大并发连接：默认 100
+安全增强
+Access 控制：启用 Cloudflare Access 身份验证
+IP 访问规则：仅允许指定国家 / IP 访问
+速率限制：防止暴力破解
+容器配置
+CPU 限制：0.5–2 核
+内存限制：256MB–1GB
+重启策略：始终重启 / 失败重启
+七、更新日志
+更新日志
+Changelog
+v1.2.0 (2026-01-15)
+新增 QUIC 协议支持
+优化连接稳定性
+修复日志乱码问题
+支持批量导入映射规则
+v1.1.0 (2025-11-20)
+新增 Access 认证集成
+支持自定义启动参数
+优化 UI 与状态显示
+修复多隧道冲突问题
+v1.0.0 (2025-09-01)
+初始版本发布
+支持一键安装、一键连接
+支持 HTTP/HTTPS 服务映射
+自动 HTTPS、证书管理
+实时状态与日志查看
