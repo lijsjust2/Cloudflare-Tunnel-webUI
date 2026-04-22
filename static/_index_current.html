@@ -1,0 +1,60 @@
+        <div id="cf-guide-modal" class="modal hidden">
+            <div class="modal-overlay" onclick="hideCFGuide()"></div>
+            <div class="modal-content" style="max-width: 540px;">
+                <div class="modal-header">
+                    <h3>Cloudflare 配置说明</h3>
+                    <button class="modal-close" onclick="hideCFGuide()">&times;</button>
+                </div>
+                <div class="modal-body" style="text-align: left; line-height: 1.8; font-size: 13.5px;">
+                    <p style="margin: 0 0 14px 0; color: var(--text-secondary);">在上侧填写 Cloudflare 账号 ID 与 API 令牌，用于创建、查看与连接 Tunnel。</p>
+
+                    <div style="background: #f8f9fa; border-radius: 10px; padding: 16px; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px; font-weight: 600; color: #F6821F;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+                            1、获取 API Token
+                        </div>
+                        <ol style="margin: 0; padding-left: 18px; color: var(--text-secondary);">
+                            <li style="margin-bottom: 4px;">前往 Cloudflare 控制台的 <strong>「配置文件」→「API 令牌」</strong> 页面</li>
+                            <li style="margin-bottom: 4px;">创建 API 令牌，需包含以下权限：</li>
+                        </ol>
+                        <ul style="margin: 6px 0 0 0; padding-left: 28px; font-size: 13px; line-height: 1.9;">
+                            <li><strong>账户</strong>: Cloudflare Tunnel <span style="color: #22c55e;">[编辑]</span></li>
+                            <li><strong>账户</strong>: Cloudflare Tunnel <span style="color: #22c55e;">[读取]</span></li>
+                            <li><strong>区域</strong>: DNS <span style="color: #22c55e;">[编辑]</span></li>
+                            <li><strong>区域</strong>: DNS <span style="color: #22c55e;">[读取]</span></li>
+                        </ul>
+                        <p style="margin: 10px 0 0 0; color: var(--text-secondary);">点击本页面的<strong>「保存」</strong>按钮后，即可获得并存储 API Token。</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; border-radius: 10px; padding: 16px; margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px; font-weight: 600; color: #3b82f6;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            2、获取 Account ID
+                        </div>
+                        <p style="margin: 0 0 8px 0; color: var(--text-secondary);">在 Cloudflare 控制台<strong>任意页面</strong>，按 <kbd style="background:#e5e7eb;padding:1px 6px;border-radius:4px;font-size:12px;font-family:inherit;">Ctrl+K</kbd> 或 <kbd style="background:#e5e7eb;padding:1px 6px;border-radius:4px;font-size:12px;font-family:inherit;">⌘+K</kbd> 打开搜索框，输入 <code style="background:#e5e7eb;padding:1px 6px;border-radius:4px;font-size:12px;">ID</code>，建议命令中会出现<strong>「复制账户 ID」</strong>选项，点击即可复制。</p>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <a href="https://github.com/lijsjust2/Cloudflare-Tunnel-webUI" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; color: #F6821F; text-decoration: none; padding: 8px 16px; background: #fff7ed; border: 1px solid #FDBA74; border-radius: 8px; font-size: 13px; font-weight: 500; transition: all .15s;" onmouseover="this.style.background='#ffedd5'" onmouseout="this.style.background='#fff7ed'">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                            打开 GitHub 仓库获取图文教程
+                        </a>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-left: 4px solid #F59E0B; padding: 12px 16px; border-radius: 8px; display: flex; align-items: flex-start; gap: 10px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" style="flex-shrink: 0; margin-top: 1px;">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <div style="font-size: 13px;">
+                            <strong style="color: #92400E;">安全提示</strong><br>
+                            <span style="color: #78350F;">请妥善保管 API 令牌，避免泄露。建议为本应用单独创建最小权限的令牌。</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
