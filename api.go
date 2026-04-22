@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"time"
 )
@@ -315,13 +316,14 @@ func (api *CloudflareAPI) FindDNSRecordByName(zoneID, name string) (*DNSRecord, 
 }
 
 type Connector struct {
-	ID               string `json:"id"`
-	ClientID         string `json:"client_id"`
-	ClientVersion    string `json:"client_version"`
-	ColoName         string `json:"colo_name"`
-	OriginIP         string `json:"origin_ip"`
-	Platform         string `json:"platform"`
-	OpenedAt         string `json:"opened_at"`
+	ID                 string `json:"id"`
+	Hostname           string `json:"hostname"`
+	ClientID           string `json:"client_id"`
+	ClientVersion      string `json:"client_version"`
+	ColoName           string `json:"colo_name"`
+	OriginIP           string `json:"origin_ip"`
+	Platform           string `json:"platform"`
+	OpenedAt           string `json:"opened_at"`
 	IsPendingReconnect bool   `json:"is_pending_reconnect"`
 }
 
@@ -337,21 +339,74 @@ func (api *CloudflareAPI) GetTunnelConnectors(tunnelID string) ([]Connector, err
 		return nil, fmt.Errorf("failed to parse connectors: %v", err)
 	}
 
-	connectors := make([]Connector, len(rawConnectors))
-	for i, raw := range rawConnectors {
-		connectors[i] = Connector{
-			ID:                getString(raw, "id"),
-			ClientID:          getString(raw, "client_id"),
-			ClientVersion:     getString(raw, "client_version"),
-			ColoName:          getString(raw, "colo_name"),
-			OriginIP:          getString(raw, "origin_ip"),
-			Platform:          getString(raw, "platform"),
-			OpenedAt:          getString(raw, "opened_at"),
-			IsPendingReconnect: getBool(raw, "is_pending_reconnect"),
+	// 按机器级别返回，每个 connector 一行
+	connectors := make([]Connector, 0, len(rawConnectors))
+	for _, raw := range rawConnectors {
+		connectorID := getString(raw, "id")
+		
+		// 从 conns 数组获取第一个连接的信息
+		var coloName, originIP, clientVersion, openedAt, clientID string
+		var isPendingReconnect bool
+		
+		if conns, ok := raw["conns"].([]interface{}); ok && len(conns) > 0 {
+			if firstConn, ok := conns[0].(map[string]interface{}); ok {
+				coloName = getString(firstConn, "colo_name")
+				originIP = getString(firstConn, "origin_ip")
+				clientVersion = getString(firstConn, "client_version")
+				openedAt = getString(firstConn, "opened_at")
+				clientID = getString(firstConn, "client_id")
+				isPendingReconnect = getBool(firstConn, "is_pending_reconnect")
+			}
 		}
+		
+		// 获取 hostname（使用反向 DNS 解析）
+		hostname := api.getConnectorHostname(connectorID, originIP)
+		
+		connectors = append(connectors, Connector{
+			ID:                 connectorID,
+			Hostname:           hostname,
+			ClientID:           clientID,
+			ClientVersion:      clientVersion,
+			ColoName:           coloName,
+			OriginIP:           originIP,
+			Platform:           getString(raw, "arch"), // platform 在顶层的 arch 字段
+			OpenedAt:           openedAt,
+			IsPendingReconnect: isPendingReconnect,
+		})
 	}
 	
 	return connectors, nil
+}
+
+// getConnectorHostname 使用多种方法获取 connector 的 hostname
+func (api *CloudflareAPI) getConnectorHostname(connectorID string, originIP string) string {
+	// 方法 1：尝试使用 REST API /connectors/{id} 获取详细信息
+	path := fmt.Sprintf("/accounts/%s/cfd_tunnel/connectors/%s", api.accountID, connectorID)
+	resp, err := api.request("GET", path, nil)
+	if err == nil {
+		var result map[string]interface{}
+		if err := json.Unmarshal(resp.Result, &result); err == nil {
+			if hostname, ok := result["hostname"].(string); ok && hostname != "" {
+				return hostname
+			}
+		}
+	}
+	
+	// 方法 2：尝试反向 DNS 解析
+	if originIP != "" {
+		names, err := net.LookupAddr(originIP)
+		if err == nil && len(names) > 0 {
+			// 返回第一个名称（去掉末尾的点）
+			hostname := names[0]
+			if hostname[len(hostname)-1] == '.' {
+				hostname = hostname[:len(hostname)-1]
+			}
+			return hostname
+		}
+	}
+	
+	// 如果都失败，使用 connector ID 作为回退
+	return connectorID
 }
 
 func getString(m map[string]interface{}, key string) string {

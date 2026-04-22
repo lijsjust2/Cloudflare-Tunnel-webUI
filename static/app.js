@@ -103,17 +103,22 @@ const i18n = {
         'settings.logout.desc': '退出当前账号，需要重新登录才能继续使用',
         'settings.logout.button': '退出登录',
         'settings.language': '语言 / Language',
-        'connectors.title': '连接器 (Connectors)',
+        'connectors.title': 'Connectors',
         'connectors.desc': '查看 Cloudflare 网络与您的基础设施之间建立的连接',
-        'connectors.id': 'Connector ID',
-        'connectors.hostname': 'Hostname',
-        'connectors.datacenter': 'Data centers',
-        'connectors.originIP': 'Origin IP',
-        'connectors.version': 'Version',
-        'connectors.platform': 'Platform',
-        'connectors.status': 'Status',
-        'service.type': 'Type (Required)',
-        'service.url': 'URL (Required)',
+        'connectors.showing': '显示 {from}-{to} 共 {total}',
+        'connectors.id': '连接器 ID',
+        'connectors.hostname': '主机名',
+        'connectors.datacenter': '数据中心',
+        'connectors.originIP': '源 IP',
+        'connectors.version': '版本',
+        'connectors.platform': '平台',
+        'connectors.status': '状态',
+        'connectors.connected': '已连接',
+        'connectors.reconnecting': '正在重连',
+        'connectors.search': '搜索连接器',
+        'connectors.addConnector': '添加连接器',
+        'service.type': '类型 (必填)',
+        'service.url': 'URL (必填)',
         'service.http': 'HTTP',
         'service.https': 'HTTPS',
         'service.unix': 'UNIX',
@@ -123,18 +128,93 @@ const i18n = {
         'service.unixtls': 'UNIX+TLS',
         'service.smb': 'SMB',
         'service.status': 'HTTP_STATUS',
-        'modal.addRoute': 'Add published application',
-        'modal.editRoute': 'Edit published application',
-        'modal.cancel': 'Cancel',
-        'modal.add': 'Add route',
-        'modal.save': 'Save',
+        'service.placeholder': '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）',
+        'service.select': '选择...',
+        'modal.addRoute': '添加已发布应用程序',
+        'modal.editRoute': '编辑已发布应用程序',
+        'modal.routeTitle': '为 {tunnelName} 添加已发布应用程序路由',
+        'modal.routeDesc': '通过公共主机名将本地应用程序发布到互联网。DNS 将自动配置。',
+        'modal.routeLearnMore': '了解有关路由到隧道的更多信息',
+        'modal.hostname': '主机名',
+        'modal.subdomain': '子域名',
+        'modal.subdomain.optional': '可选',
+        'modal.domain': '域',
+        'modal.domain.required': '必填',
+        'modal.domain.placeholder': '从您的账户中选择一个域',
+        'modal.path': '路径',
+        'modal.path.optional': '可选',
+        'modal.pathMatchingTitle': '路径匹配的工作原理',
+        'modal.pathMatchingDesc': '路径字段使用正则表达式模式。常见示例：',
+        'modal.pathMatchAll': '匹配所有路径：留空',
+        'modal.pathMatchAnywhere': '在路径中的任何位置匹配：',
+        'modal.pathMatchPrefix': '匹配路径前缀：',
+        'modal.pathMatchExtension': '按扩展名匹配文件：',
+        'modal.learnMore': '了解更多',
+        'modal.service': '服务',
+        'modal.type': '类型',
+        'modal.type.required': '必填',
+        'modal.url': 'URL',
+        'modal.url.required': '必填',
+        'modal.cancel': '取消',
+        'modal.add': '添加路由',
+        'modal.save': '保存',
         'modal.loadingZones': '正在加载域名列表...',
-        'toast.tunnelStarted': '隧道已启动',
-        'toast.tunnelStopped': '隧道已停止',
-        'toast.tunnelDeleted': '隧道已删除',
-        'toast.switched': '已切换到隧道',
-        'toast.saved': '保存成功',
-        'toast.error': '操作失败'
+        'tunnels.name': '名称',
+        'tunnels.id': 'ID',
+        'tunnels.status': '状态',
+        'tunnels.replicas': '副本',
+        'tunnels.routes': '路由',
+        'tunnels.created': '创建时间',
+        'tunnels.actions': '操作',
+        'tunnels.inUse': '使用中',
+        'tunnels.start': '使用',
+        'tunnels.stop': '停止',
+        'tunnels.detail': '详情',
+        'tunnels.delete': '删除',
+        'tunnels.showing': '显示 1-{count} 共 {total}',
+        'tunnels.noRoutes': '无路由',
+        'tunnels.apps': '个应用',
+        'tunnels.create.name': '隧道名称',
+        'tunnels.create.placeholder': '例如: my-tunnel',
+        'tunnels.create.tip': '推荐一台服务器使用独立隧道，方便管理地址映射',
+        'tunnels.create.submit': '创建隧道',
+        'tunnels.health': '健康',
+        'tunnels.degraded': '降级',
+        'tunnels.inactive': '未激活',
+        'tunnels.down': '已关闭',
+        'settings.cf.notConnected': '未连接',
+        'settings.cf.connected': '已连接',
+        'settings.cf.accountName': 'Account Name',
+        'settings.cf.email': 'Email',
+        'settings.version.cannotConnect': '无法联网？',
+        'settings.version.downloadFrom': '前往',
+        'settings.version.officialGitHub': 'Cloudflare 官方 GitHub',
+        'settings.version.manualDownload': '手动下载对应架构的文件后上传安装',
+        'settings.version.currentSystem': '当前系统',
+        'settings.version.detecting': '检测中...',
+        'settings.version.detectFailed': '检测失败',
+        'settings.version.manualUpload': '手动上传',
+        'settings.version.preparing': '准备中...',
+        'settings.version.cancelInstall': '取消安装',
+        'settings.version.recommended': '推荐',
+        'install.progress': '{percent}%',
+        'toast.confirmDelete': '确定要删除此隧道吗？此操作无法撤销。',
+        'toast.confirmDeleteRoute': '确定要删除此路由吗？',
+        'tunnel.type': '隧道类型',
+        'tunnel.uptime': '正常运行时间',
+        'tunnel.hours': '小时',
+        'back.toTunnels': '返回隧道',
+        'overview': '概述',
+        'cidrRoutes': 'CIDR 路由',
+        'hostnameRoutes': '主机名路由',
+        'publishedAppRoutes': '已发布应用程序路由',
+        'liveLogs': '实时日志',
+        'basicInfo': '基本信息',
+        'all': '全部',
+        'edit': '编辑',
+        'healthy': '正常',
+        'running': '运行中',
+        'stopped': '已停止',
     },
     en: {
         'app.title': 'Cloudflare Tunnel WebUI',
@@ -196,7 +276,8 @@ const i18n = {
         'settings.logout.button': 'Logout',
         'settings.language': 'Language / 语言',
         'connectors.title': 'Connectors',
-        'connectors.desc': 'Review established connections between Cloudflare\'s network and your infrastructure',
+        'connectors.desc': 'Review established connections between Cloudflare\'s network and your infrastructure.',
+        'connectors.showing': 'Showing {from}-{to} of {total}',
         'connectors.id': 'Connector ID',
         'connectors.hostname': 'Hostname',
         'connectors.datacenter': 'Data centers',
@@ -204,6 +285,10 @@ const i18n = {
         'connectors.version': 'Version',
         'connectors.platform': 'Platform',
         'connectors.status': 'Status',
+        'connectors.connected': 'Connected',
+        'connectors.reconnecting': 'Reconnecting',
+        'connectors.search': 'Search a connector',
+        'connectors.addConnector': 'Add a connector',
         'service.type': 'Type (Required)',
         'service.url': 'URL (Required)',
         'service.http': 'HTTP',
@@ -215,18 +300,93 @@ const i18n = {
         'service.unixtls': 'UNIX+TLS',
         'service.smb': 'SMB',
         'service.status': 'HTTP_STATUS',
-        'modal.addRoute': 'Add published application',
-        'modal.editRoute': 'Edit published application',
+        'service.placeholder': 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)',
+        'service.select': 'Select...',
+        'modal.addRoute': 'Add a published application',
+        'modal.editRoute': 'Edit a published application',
+        'modal.routeTitle': 'Add a published application route for {tunnelName}',
+        'modal.routeDesc': 'Publish a local application to the Internet via public hostname. DNS will be automatically configured.',
+        'modal.routeLearnMore': 'Learn more about routing to tunnels',
+        'modal.hostname': 'Hostname',
+        'modal.subdomain': 'Subdomain',
+        'modal.subdomain.optional': 'Optional',
+        'modal.domain': 'Domain',
+        'modal.domain.required': 'Required',
+        'modal.domain.placeholder': 'Select a zone from your account',
+        'modal.path': 'Path',
+        'modal.path.optional': 'Optional',
+        'modal.pathMatchingTitle': 'How path matching works',
+        'modal.pathMatchingDesc': 'The path field uses regex patterns. Common examples:',
+        'modal.pathMatchAll': 'Match all paths: leave empty',
+        'modal.pathMatchAnywhere': 'Match anywhere in path:',
+        'modal.pathMatchPrefix': 'Match path prefix:',
+        'modal.pathMatchExtension': 'Match files by extension:',
+        'modal.learnMore': 'Learn more',
+        'modal.service': 'Service',
+        'modal.type': 'Type',
+        'modal.type.required': 'Required',
+        'modal.url': 'URL',
+        'modal.url.required': 'Required',
         'modal.cancel': 'Cancel',
         'modal.add': 'Add route',
         'modal.save': 'Save',
         'modal.loadingZones': 'Loading domains...',
-        'toast.tunnelStarted': 'Tunnel started',
-        'toast.tunnelStopped': 'Tunnel stopped',
-        'toast.tunnelDeleted': 'Tunnel deleted',
-        'toast.switched': 'Switched to tunnel',
-        'toast.saved': 'Saved successfully',
-        'toast.error': 'Operation failed'
+        'tunnels.name': 'Name',
+        'tunnels.id': 'ID',
+        'tunnels.status': 'Status',
+        'tunnels.replicas': 'Replicas',
+        'tunnels.routes': 'Routes',
+        'tunnels.created': 'Created',
+        'tunnels.actions': 'Actions',
+        'tunnels.inUse': 'In Use',
+        'tunnels.start': 'Use',
+        'tunnels.stop': 'Stop',
+        'tunnels.detail': 'Detail',
+        'tunnels.delete': 'Delete',
+        'tunnels.showing': 'Showing 1-{count} of {total}',
+        'tunnels.noRoutes': 'No routes',
+        'tunnels.apps': 'apps',
+        'tunnels.create.name': 'Tunnel Name',
+        'tunnels.create.placeholder': 'e.g., my-tunnel',
+        'tunnels.create.tip': 'It\'s recommended to use a dedicated tunnel for each server for easier route management',
+        'tunnels.create.submit': 'Create Tunnel',
+        'tunnels.health': 'Healthy',
+        'tunnels.degraded': 'Degraded',
+        'tunnels.inactive': 'Inactive',
+        'tunnels.down': 'Down',
+        'settings.cf.notConnected': 'Not Connected',
+        'settings.cf.connected': 'Connected',
+        'settings.cf.accountName': 'Account Name',
+        'settings.cf.email': 'Email',
+        'settings.version.cannotConnect': 'Cannot connect to internet?',
+        'settings.version.downloadFrom': 'Go to',
+        'settings.version.officialGitHub': 'Cloudflare Official GitHub',
+        'settings.version.manualDownload': 'to manually download the file for your architecture and upload it',
+        'settings.version.currentSystem': 'Current System',
+        'settings.version.detecting': 'Detecting...',
+        'settings.version.detectFailed': 'Detection failed',
+        'settings.version.manualUpload': 'Manual Upload',
+        'settings.version.preparing': 'Preparing...',
+        'settings.version.cancelInstall': 'Cancel Installation',
+        'settings.version.recommended': 'Recommended',
+        'install.progress': '{percent}%',
+        'toast.confirmDelete': 'Are you sure you want to delete this tunnel? This action cannot be undone.',
+        'toast.confirmDeleteRoute': 'Are you sure you want to delete this route?',
+        'tunnel.type': 'Tunnel Type',
+        'tunnel.uptime': 'Uptime',
+        'tunnel.hours': 'hours',
+        'back.toTunnels': 'Back to tunnels',
+        'overview': 'Overview',
+        'cidrRoutes': 'CIDR routes',
+        'hostnameRoutes': 'Hostname routes',
+        'publishedAppRoutes': 'Published application routes',
+        'liveLogs': 'Live logs',
+        'basicInfo': 'Basic Information',
+        'all': 'All',
+        'edit': 'Edit',
+        'healthy': 'Healthy',
+        'running': 'Running',
+        'stopped': 'Stopped',
     }
 };
 
@@ -334,7 +494,7 @@ async function loadTunnels() {
             state.tunnels = [];
             renderTunnels();
         } else {
-            showToast('加载隧道失败: ' + e.message, 'error');
+            showToast((state.language === 'zh' ? '加载隧道失败: ' : 'Failed to load tunnels: ') + e.message, 'error');
         }
     }
 }
@@ -345,7 +505,7 @@ async function loadZones() {
         console.log('Loaded zones:', state.zones.length, state.zones);
     } catch (e) {
         console.error('Failed to load zones:', e);
-        showToast('加载域名列表失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '加载域名列表失败: ' : 'Failed to load domains: ') + e.message, 'error');
     }
 }
 
@@ -400,13 +560,13 @@ async function loadCloudflaredVersion() {
 function renderTunnels() {
     const list = $('#tunnels-list');
     if (!state.tunnels.length) {
-        list.innerHTML = '<div class="empty-state">暂无隧道，点击上方按钮创建</div>';
+        list.innerHTML = '<div class="empty-state">' + (state.language === 'zh' ? '暂无隧道，点击上方按钮创建' : 'No tunnels yet, click the button above to create one') + '</div>';
         return;
     }
     
     let statusText = '';
     if (state.tunnels.some(t => t.running)) {
-        statusText = `<span class="status-badge status-badge-success" style="margin-left: 8px;">运行中</span>`;
+        statusText = `<span class="status-badge status-badge-success" style="margin-left: 8px;">${t('tunnels.inUse')}</span>`;
     }
     
     list.innerHTML = `
@@ -414,63 +574,61 @@ function renderTunnels() {
             <table class="tunnels-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                        <th>Replicas</th>
-                        <th>Routes</th>
-                        <th>Created</th>
-                        <th>Actions</th>
+                        <th>${t('tunnels.name')}</th>
+                        <th>${t('tunnels.id')}</th>
+                        <th>${t('tunnels.status')}</th>
+                        <th>${t('tunnels.routes')}</th>
+                        <th>${t('tunnels.created')}</th>
+                        <th>${t('tunnels.actions')}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    ${state.tunnels.map(t => {
-                        let statusLabel = 'Down';
+                    ${state.tunnels.map(tunnel => {
+                        let statusLabel = t('tunnels.down');
                         let statusClass = 'down';
-                        const cfStatus = (t.status || '').toLowerCase();
+                        const cfStatus = (tunnel.status || '').toLowerCase();
                         
-                        if (t.running) {
-                            statusLabel = 'Running';
+                        if (tunnel.running) {
+                            statusLabel = t('running');
                             statusClass = 'running';
                         } else if (cfStatus === 'healthy') {
-                            statusLabel = 'Healthy';
+                            statusLabel = t('healthy');
                             statusClass = 'healthy';
                         } else if (cfStatus === 'degraded') {
-                            statusLabel = 'Degraded';
+                            statusLabel = t('tunnels.degraded');
                             statusClass = 'degraded';
                         } else if (cfStatus === 'inactive') {
-                            statusLabel = 'Inactive';
+                            statusLabel = t('tunnels.inactive');
                             statusClass = 'inactive';
                         } else if (cfStatus === 'down') {
-                            statusLabel = 'Down';
+                            statusLabel = t('tunnels.down');
                             statusClass = 'down';
                         }
                         
-                        const routesCount = (t.hostnames || []).length;
-                        const routesText = routesCount > 0 ? `${routesCount} app${routesCount > 1 ? 's' : ''}` : 'No routes';
+                        const routesCount = (tunnel.hostnames || []).length;
+                        const routesText = routesCount > 0 ? `${routesCount} ${t('tunnels.apps')}` : t('tunnels.noRoutes');
                         
                         return `
-                        <tr data-id="${t.id || t.tunnelId}" ${t.running ? 'class="row-running"' : ''}>
+                        <tr data-id="${tunnel.id || tunnel.tunnelId}" ${tunnel.running ? 'class="row-running"' : ''}>
                             <td>
-                                <a href="javascript:void(0)" onclick="showTunnelDetail('${t.id || t.tunnelId}')" style="color: var(--primary); text-decoration: underline; font-weight: 500;">${t.name}</a>
-                                ${t.running ? '<span class="active-badge">使用中</span>' : ''}
+                                <a href="javascript:void(0)" onclick="showTunnelDetail('${tunnel.id || tunnel.tunnelId}')" style="color: var(--primary); text-decoration: underline; font-weight: 500;">${tunnel.name}</a>
+                                ${tunnel.running ? '<span class="active-badge">' + t('tunnels.inUse') + '</span>' : ''}
                             </td>
-                            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${t.tunnelId}</code></td>
+                            <td><code style="font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${tunnel.tunnelId}</code></td>
                             <td><span class="status-tag ${statusClass}">${statusLabel}</span></td>
-                            <td>${t.connections || 0}</td>
                             <td><span style="display: inline-flex; align-items: center; gap: 4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>${routesText}</span></td>
-                            <td>${t.createdAt ? new Date(t.createdAt).toLocaleDateString() : '-'}</td>
+                            <td>${tunnel.createdAt ? new Date(tunnel.createdAt).toLocaleDateString() : '-'}</td>
                             <td class="actions-cell">
-                                ${!t.running ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); useTunnel('${t.id || t.tunnelId}')">使用</button>` : `<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); stopTunnel('${t.id}')">停止</button>`}
-                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showTunnelDetail('${t.id || t.tunnelId}')">详情</button>
-                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteTunnel('${t.id || t.tunnelId}')">删除</button>
+                                ${!tunnel.running ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); useTunnel('${tunnel.id || tunnel.tunnelId}')">${t('tunnels.start')}</button>` : `<button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); stopTunnel('${tunnel.id}')">${t('tunnels.stop')}</button>`}
+                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showTunnelDetail('${tunnel.id || tunnel.tunnelId}')">${t('tunnels.detail')}</button>
+                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteTunnel('${tunnel.id || tunnel.tunnelId}')">${t('tunnels.delete')}</button>
                             </td>
                         </tr>
                     `}).join('')}
                 </tbody>
             </table>
             <div style="padding: 8px 16px; font-size: 13px; color: var(--text-light); border-top: 1px solid var(--border);">
-                Showing 1-${state.tunnels.length} of ${state.tunnels.length}
+                ${t('tunnels.showing').replace('{count}', state.tunnels.length).replace('{total}', state.tunnels.length)}
             </div>
         </div>
     `;
@@ -478,16 +636,16 @@ function renderTunnels() {
 
 async function showCreateTunnelModal() {
     if (!state.accountVerified) {
-        showToast('请验证 Cloudflare 账号', 'error');
+        showToast(state.language === 'zh' ? '请验证 Cloudflare 账号' : 'Please verify Cloudflare account', 'error');
         showView('settings-view');
         return;
     }
     
-    showModal('创建隧道', `
+    showModal(t('tunnels.create'), `
         <form id="create-tunnel-form">
             <div class="form-group">
-                <label>隧道名称</label>
-                <input type="text" id="tunnel-name" placeholder="例如: my-tunnel" required>
+                <label>${t('tunnels.create.name')}</label>
+                <input type="text" id="tunnel-name" placeholder="${t('tunnels.create.placeholder')}" required>
             </div>
             <div style="padding: 12px; background: #f0f9ff; border-radius: 8px; border: 1px solid #bae6fd; margin-top: 8px;">
                 <div style="display: flex; align-items: flex-start; gap: 8px;">
@@ -496,13 +654,13 @@ async function showCreateTunnelModal() {
                         <line x1="12" y1="16" x2="12" y2="12"/>
                         <line x1="12" y1="8" x2="12.01" y2="8"/>
                     </svg>
-                    <span style="font-size: 13px; color: #0369a1;">推荐一台服务器使用独立隧道，方便管理地址映射</span>
+                    <span style="font-size: 13px; color: #0369a1;">${t('tunnels.create.tip')}</span>
                 </div>
             </div>
         </form>
     `, `
-        <button class="btn btn-secondary" onclick="hideModal()">取消</button>
-        <button class="btn btn-primary" onclick="createTunnel()">创建</button>
+        <button class="btn btn-secondary" onclick="hideModal()">${t('modal.cancel')}</button>
+        <button class="btn btn-primary" onclick="createTunnel()">${t('tunnels.create.submit')}</button>
     `);
 }
 
@@ -510,27 +668,27 @@ async function createTunnel() {
     const name = $('#tunnel-name').value.trim();
     
     if (!name) {
-        showToast('请输入隧道名称', 'error');
+        showToast(state.language === 'zh' ? '请输入隧道名称' : 'Please enter tunnel name', 'error');
         return;
     }
     
     const existingTunnel = state.tunnels.find(t => t.name === name);
     if (existingTunnel) {
-        showToast('已存在同名隧道，请使用其他名称', 'error');
+        showToast(state.language === 'zh' ? '已存在同名隧道，请使用其他名称' : 'A tunnel with this name already exists, please use another name', 'error');
         return;
     }
     
     try {
         await API.post('/api/tunnels', { name });
         hideModal();
-        showToast('隧道创建成功', 'success');
+        showToast(state.language === 'zh' ? '隧道创建成功' : 'Tunnel created successfully', 'success');
         await loadTunnels();
     } catch (e) {
         let msg = e.message;
         if (msg.includes('already have a tunnel with this name')) {
-            msg = 'Cloudflare 上已存在同名隧道，请使用其他名称';
+            msg = state.language === 'zh' ? 'Cloudflare 上已存在同名隧道，请使用其他名称' : 'A tunnel with this name already exists on Cloudflare, please use another name';
         }
-        showToast('创建失败: ' + msg, 'error');
+        showToast((state.language === 'zh' ? '创建失败: ' : 'Creation failed: ') + msg, 'error');
     }
 }
 
@@ -548,10 +706,10 @@ async function showTunnelDetail(id) {
             const connectors = connData.connectors || [];
             if (connectors.length > 0) {
                 connectorsHTML = `
-                    <div class="connectors-section" style="margin-top: 20px; background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden;">
+                    <div class="connectors-section" style="margin-top: 24px; margin-bottom: 32px; background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden;">
                         <div class="section-header" style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="margin: 0; font-size: 16px;">${t('connectors.title')}</h3>
-                            <span style="font-size: 13px; color: var(--text-light);">Showing ${connectors.length} of ${connectors.length}</span>
+                            <span style="font-size: 13px; color: var(--text-light);">${t('connectors.showing').replace('{from}', '1').replace('{to}', connectors.length).replace('{total}', connectors.length)}</span>
                         </div>
                         <div style="padding: 12px 16px; font-size: 13px; color: var(--text-secondary); background: #f8fafc; border-bottom: 1px solid var(--border);">
                             ${t('connectors.desc')}
@@ -561,7 +719,6 @@ async function showTunnelDetail(id) {
                                 <thead>
                                     <tr style="background: #f8fafc; border-bottom: 2px solid var(--border);">
                                         <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">${t('connectors.id')}</th>
-                                        <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">${t('connectors.hostname')}</th>
                                         <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">${t('connectors.datacenter')}</th>
                                         <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">${t('connectors.originIP')}</th>
                                         <th style="padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-secondary);">${t('connectors.version')}</th>
@@ -575,13 +732,12 @@ async function showTunnelDetail(id) {
                                             <td style="padding: 10px 12px;">
                                                 <code style="font-size: 11px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px; word-break: break-all;">${c.id}</code>
                                             </td>
-                                            <td style="padding: 10px 12px;">${c.clientID || '-'}</td>
                                             <td style="padding: 10px 12px;">${c.coloName || '-'}</td>
                                             <td style="padding: 10px 12px;"><code>${c.originIP || '-'}</code></td>
                                             <td style="padding: 10px 12px;">${c.version || '-'}</td>
                                             <td style="padding: 10px 12px;">${c.platform || '-'}</td>
                                             <td style="padding: 10px 12px;">
-                                                <span class="status-tag ${c.isPending ? 'degraded' : 'running'}">${c.isPending ? 'Reconnecting' : 'Connected'}</span>
+                                                <span class="status-tag ${c.isPending ? 'degraded' : 'running'}">${c.isPending ? t('connectors.reconnecting') : t('connectors.connected')}</span>
                                             </td>
                                         </tr>
                                     `).join('')}
@@ -596,7 +752,7 @@ async function showTunnelDetail(id) {
         }
         
         $('#tunnel-detail-content').innerHTML = `
-            <div class="tunnel-detail-info">
+            <div class="tunnel-detail-info" style="margin-bottom: 24px;">
                 <div class="info-grid">
                     <div class="info-item">
                         <label>${t('tunnel.id')}</label>
@@ -607,15 +763,11 @@ async function showTunnelDetail(id) {
                         <span>${tunnel.running ? t('tunnel.running') : tunnel.status || t('tunnel.stopped')}</span>
                     </div>
                     <div class="info-item">
-                        <label>${t('tunnel.connections')}</label>
-                        <span>${tunnel.connections?.length || 0}</span>
-                    </div>
-                    <div class="info-item">
                         <label>${t('tunnel.created')}</label>
                         <span>${tunnel.createdAt ? new Date(tunnel.createdAt).toLocaleString() : '-'}</span>
                     </div>
                 </div>
-                <div class="tunnel-actions" style="margin-top: 16px;">
+                <div class="tunnel-actions" style="margin-top: 20px;">
                     ${!tunnel.running 
                         ? `<button class="btn btn-primary" onclick="event.stopPropagation(); useTunnel('${tunnel.id || tunnel.tunnelId}')">${t('tunnel.use')}</button>`
                         : `<button class="btn btn-secondary" onclick="event.stopPropagation(); stopTunnel('${tunnel.id || tunnel.tunnelId}')">${t('tunnel.stop')}</button>`
@@ -626,7 +778,7 @@ async function showTunnelDetail(id) {
             
             ${connectorsHTML}
             
-            <div class="hostnames-section">
+            <div class="hostnames-section" style="margin-top: 24px;">
                 <div class="section-header">
                     <h3>${t('routes.title')}</h3>
                     <button class="btn btn-primary btn-sm" onclick="showAddHostnameModal()">${t('routes.add')}</button>
@@ -637,7 +789,7 @@ async function showTunnelDetail(id) {
         
         showView('tunnel-detail-view');
     } catch (e) {
-        showToast('加载详情失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '加载详情失败: ' : 'Failed to load details: ') + e.message, 'error');
     }
 }
 
@@ -673,18 +825,18 @@ function renderHostnames() {
 async function startTunnel(id) {
     try {
         await API.post(`/api/tunnels/${id}/start`);
-        showToast('隧道已启动', 'success');
+        showToast(state.language === 'zh' ? '隧道已启动' : 'Tunnel started', 'success');
         await loadTunnels();
         if (state.currentTunnel?.id === id) {
             await showTunnelDetail(id);
         }
     } catch (e) {
-        showToast('启动失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '启动失败: ' : 'Start failed: ') + e.message, 'error');
     }
 }
 
 async function useTunnel(id) {
-    if (!confirm('确定要使用此隧道吗？这将停止当前运行的隧道并切换到该隧道。')) return;
+    if (!confirm(state.language === 'zh' ? '确定要使用此隧道吗？这将停止当前运行的隧道并切换到该隧道。' : 'Are you sure you want to use this tunnel? This will stop the currently running tunnel and switch to it.')) return;
     
     try {
         const runningTunnel = state.tunnels.find(t => t.running && t.id !== id);
@@ -693,72 +845,72 @@ async function useTunnel(id) {
         }
         
         await API.post(`/api/tunnels/${id}/start`);
-        showToast(`已切换到隧道: ${state.tunnels.find(t => t.id === id || t.tunnelId === id)?.name || id}`, 'success');
+        showToast(`${state.language === 'zh' ? '已切换到隧道: ' : 'Switched to tunnel: '} ${state.tunnels.find(t => t.id === id || t.tunnelId === id)?.name || id}`, 'success');
         await loadTunnels();
         if (state.currentTunnel?.id === id || state.currentTunnel?.tunnelId === id) {
             await showTunnelDetail(id);
         }
     } catch (e) {
-        showToast('切换失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '切换失败: ' : 'Switch failed: ') + e.message, 'error');
     }
 }
 
 async function stopTunnel(id) {
     try {
         await API.post(`/api/tunnels/${id}/stop`);
-        showToast('隧道已停止', 'success');
+        showToast(state.language === 'zh' ? '隧道已停止' : 'Tunnel stopped', 'success');
         await loadTunnels();
         if (state.currentTunnel?.id === id || state.currentTunnel?.tunnelId === id) {
             await showTunnelDetail(state.currentTunnel?.id || state.currentTunnel?.tunnelId);
         }
     } catch (e) {
-        showToast('停止失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '停止失败: ' : 'Stop failed: ') + e.message, 'error');
     }
 }
 
 async function deleteTunnel(id) {
-    if (!confirm('确定要删除这个隧道吗？')) return;
+    if (!confirm(t('toast.confirmDelete'))) return;
     try {
         await API.del(`/api/tunnels/${id}`);
-        showToast('隧道已删除', 'success');
+        showToast(state.language === 'zh' ? '隧道已删除' : 'Tunnel deleted', 'success');
         await loadTunnels();
         showView('tunnels-view');
     } catch (e) {
-        showToast('删除失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '删除失败: ' : 'Delete failed: ') + e.message, 'error');
     }
 }
 
 async function showLogsModal(id) {
     try {
         const data = await API.get(`/api/tunnels/${id}/logs`);
-        showModal('隧道日志', `
+        showModal(state.language === 'zh' ? '隧道日志' : 'Tunnel Logs', `
             <div class="logs-container">
-                <pre class="logs-content">${data.logs || '暂无日志'}</pre>
+                <pre class="logs-content">${data.logs || (state.language === 'zh' ? '暂无日志' : 'No logs')}</pre>
             </div>
         `, `
-            <button class="btn btn-secondary" onclick="clearLogs('${id}')">清空日志</button>
-            <button class="btn btn-primary" onclick="hideModal()">关闭</button>
+            <button class="btn btn-secondary" onclick="clearLogs('${id}')">${state.language === 'zh' ? '清空日志' : 'Clear Logs'}</button>
+            <button class="btn btn-primary" onclick="hideModal()">${t('modal.cancel')}</button>
         `);
     } catch (e) {
-        showToast('加载日志失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '加载日志失败: ' : 'Failed to load logs: ') + e.message, 'error');
     }
 }
 
 async function clearLogs(id) {
     try {
         await API.del(`/api/tunnels/${id}/logs`);
-        showToast('日志已清空', 'success');
+        showToast(state.language === 'zh' ? '日志已清空' : 'Logs cleared', 'success');
         await showLogsModal(id);
     } catch (e) {
-        showToast('清空失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '清空失败: ' : 'Clear failed: ') + e.message, 'error');
     }
 }
 
 async function showAddHostnameModal() {
-    showModal('Add published application', `
+    showModal(t('modal.addRoute'), `
         <div style="text-align: center; padding: 40px 20px;">
             <div class="loading-spinner"></div>
-            <p style="margin-top: 12px; color: var(--text-light);">正在加载域名列表...</p>
+            <p style="margin-top: 12px; color: var(--text-light);">${t('modal.loadingZones')}</p>
         </div>
     `, '');
     
@@ -771,81 +923,102 @@ async function showAddHostnameModal() {
     
     const zoneOptions = state.zones.map(z => `<option value="${z.id}" data-name="${z.name}">${z.name}</option>`).join('');
     
-    $('#modal-title').textContent = 'Add published application';
+    $('#modal-title').textContent = t('modal.addRoute');
     $('#modal-body').innerHTML = `
-        <p style="font-size: 13px; color: var(--text-light); margin-bottom: 16px;">Publish a local application to the Internet via public hostname. DNS will be automatically configured. <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/routing-to-tunnel/" target="_blank" style="color: var(--primary);">Learn more about routing to tunnels ↗</a></p>
-        <form id="hostname-form">
-            <div class="form-group">
-                <label>Hostname</label>
-                <div class="form-row">
-                    <div style="flex: 1;">
-                        <input type="text" id="subdomain" placeholder="e.g., www, blog, api" value="">
-                        <div class="form-hint">Subdomain (optional)</div>
-                    </div>
-                    <div style="flex: 1.5;">
-                        <select id="zone-select" onchange="updateFullHostname()" required>
-                            <option value="">Select a zone from your account</option>
-                            ${zoneOptions}
-                        </select>
-                        <div class="form-hint">Domain *</div>
-                    </div>
-                </div>
-            </div>
-            <div id="full-hostname-preview" class="full-hostname-preview hidden">
-                <label>Full hostname:</label>
-                <span id="full-hostname-value"></span>
-            </div>
-            <div class="form-group">
-                <label>Path (optional)</label>
-                <input type="text" id="path-pattern" placeholder="^/blog" oninput="updatePathHint()">
-                <div class="form-hint"></div>
-            </div>
-            <div id="path-matching-info" class="path-matching-info hidden" style="padding: 12px; background: #eff6ff; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 13px; font-weight: 500; color: #1e40af; margin-bottom: 8px;">How path matching works</div>
-                <div style="font-size: 12px; color: #3b82f6; line-height: 1.8;">
-                    The path field uses regex patterns. Common examples:
-                    <ul style="margin: 4px 0 0 16px; padding: 0;">
-                        <li>Match all paths: leave empty</li>
-                        <li>Match anywhere in path: <code>blog</code> (matches /blog, /archive/blog/post, etc.)</li>
-                        <li>Match path prefix: <code>^/api</code></li>
-                        <li>Match files by extension: <code>\\.(jpg|png|css|js)$</code></li>
-                    </ul>
-                </div>
-                <a href="#" onclick="return false;" style="color: #2563eb; font-size: 12px; margin-top: 4px; display: inline-block;">Learn more →</a>
-            </div>
-            <div class="form-group">
-                <label>Service *</label>
-                <div class="form-row" style="margin-top: 8px;">
-                    <div style="flex: 1;">
-                        <select id="service-type" onchange="updateServicePlaceholder()" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: white;">
-                            <option value="">Select...</option>
-                            <option value="http://">HTTP</option>
-                            <option value="https://">HTTPS</option>
-                            <option value="unix://">UNIX</option>
-                            <option value="tcp://">TCP</option>
-                            <option value="ssh://">SSH</option>
-                            <option value="rdp://">RDP</option>
-                            <option value="unix+tls://">UNIX+TLS</option>
-                            <option value="smb://">SMB</option>
-                            <option value="http_status:404">HTTP_STATUS</option>
-                        </select>
-                        <div class="form-hint">Type (Required)</div>
-                    </div>
-                    <div style="flex: 2; display: flex; align-items: flex-start; gap: 4px; position: relative;">
-                        <span style="position: absolute; left: 12px; top: 38px; color: var(--text-light); font-weight: 500; pointer-events: none;" id="service-prefix">//</span>
-                        <input type="text" id="service" placeholder="localhost:8080" required style="flex: 1; padding-left: 24px;">
-                        <div class="form-hint">URL (Required)</div>
+        <div class="space-y-5">
+            <!-- Description -->
+            <p class="text-sm text-gray-600">${t('modal.routeDesc')} <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/routing-to-tunnel/" target="_blank" class="text-primary hover:text-primary-dark">${t('modal.routeLearnMore')} ↗</a></p>
+            
+            <form id="hostname-form" class="space-y-5">
+                <!-- Hostname Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">${t('modal.hostname')}</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <input type="text" id="subdomain" placeholder="e.g., www, blog, api" value=""
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none">
+                            <div class="mt-1.5 text-xs text-gray-500">${t('modal.subdomain')} (${t('modal.subdomain.optional')})</div>
+                        </div>
+                        <div>
+                            <select id="zone-select" onchange="updateFullHostname()" required
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-white">
+                                <option value="">${t('modal.domain.placeholder')}</option>
+                                ${zoneOptions}
+                            </select>
+                            <div class="mt-1.5 text-xs text-gray-500">${t('modal.domain')} *</div>
+                        </div>
                     </div>
                 </div>
-                <div id="service-hint" style="font-size: 12px; color: var(--text-light); margin-top: 4px;">
-                    Route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)
+                
+                <!-- Full Hostname Preview -->
+                <div id="full-hostname-preview" class="hidden p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium text-gray-700">Full hostname:</span>
+                        <span id="full-hostname-value" class="text-sm font-mono text-primary"></span>
+                    </div>
                 </div>
-            </div>
-        </form>
+                
+                <!-- Path Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">${t('modal.path')} (${t('modal.path.optional')})</label>
+                    <input type="text" id="path-pattern" placeholder="^/blog" oninput="updatePathHint()"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none">
+                </div>
+                
+                <!-- Path Matching Info -->
+                <div id="path-matching-info" class="hidden p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div class="text-sm font-semibold text-blue-900 mb-2">${t('modal.pathMatchingTitle')}</div>
+                    <div class="text-xs text-blue-800 space-y-1">
+                        <div>${t('modal.pathMatchingDesc')}</div>
+                        <ul class="ml-4 mt-2 space-y-1">
+                            <li><code class="px-1.5 py-0.5 bg-blue-100 rounded text-blue-900">(empty)</code> - ${t('modal.pathMatchAll')}</li>
+                            <li><code class="px-1.5 py-0.5 bg-blue-100 rounded text-blue-900">blog</code> - ${t('modal.pathMatchAnywhere')}</li>
+                            <li><code class="px-1.5 py-0.5 bg-blue-100 rounded text-blue-900">^/api</code> - ${t('modal.pathMatchPrefix')}</li>
+                            <li><code class="px-1.5 py-0.5 bg-blue-100 rounded text-blue-900">\\.(jpg|png|css|js)$</code> - ${t('modal.pathMatchExtension')}</li>
+                        </ul>
+                    </div>
+                    <a href="#" onclick="return false;" class="inline-block mt-2 text-xs text-blue-600 hover:text-blue-800">${t('modal.learnMore')} →</a>
+                </div>
+                
+                <!-- Service Section -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">${t('modal.service')} *</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="sm:col-span-1">
+                            <select id="service-type" onchange="updateServicePlaceholder()"
+                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-white">
+                                <option value="">${t('service.select')}</option>
+                                <option value="http://">${t('service.http')}</option>
+                                <option value="https://">${t('service.https')}</option>
+                                <option value="unix://">${t('service.unix')}</option>
+                                <option value="tcp://">${t('service.tcp')}</option>
+                                <option value="ssh://">${t('service.ssh')}</option>
+                                <option value="rdp://">${t('service.rdp')}</option>
+                                <option value="unix+tls://">${t('service.unixtls')}</option>
+                                <option value="smb://">${t('service.smb')}</option>
+                                <option value="http_status:404">${t('service.status')}</option>
+                            </select>
+                            <div class="mt-1.5 text-xs text-gray-500">${t('modal.type')} (${t('modal.type.required')})</div>
+                        </div>
+                        <div class="sm:col-span-2 relative">
+                            <div class="relative">
+                                <span id="service-prefix" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium pointer-events-none select-none">//</span>
+                                <input type="text" id="service" placeholder="localhost:8080" required
+                                    class="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none">
+                            </div>
+                            <div class="mt-1.5 text-xs text-gray-500">${t('modal.url')} (${t('modal.url.required')})</div>
+                        </div>
+                    </div>
+                    <div id="service-hint" class="mt-2 text-xs text-gray-500">
+                        ${state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)'}
+                    </div>
+                </div>
+            </form>
+        </div>
     `;
     $('#modal-footer').innerHTML = `
-        <button class="btn btn-secondary" onclick="hideModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="addHostname()">Add route</button>
+        <button class="btn btn-secondary" onclick="hideModal()">${t('modal.cancel')}</button>
+        <button class="btn btn-primary" onclick="addHostname()">${t('modal.add')}</button>
     `;
     
     setTimeout(() => {
@@ -867,16 +1040,16 @@ function updateServicePlaceholder() {
     const selectedType = typeSelect.value;
     
     const placeholders = {
-        '': { placeholder: 'localhost:8080', prefix: '//', hint: 'Route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)' },
-        'http://': { placeholder: 'localhost:8080', prefix: 'http://', hint: 'HTTP service URL' },
-        'https://': { placeholder: 'localhost:8443', prefix: 'https://', hint: 'HTTPS service URL' },
-        'unix://': { placeholder: '/var/run/app.sock', prefix: 'unix://', hint: 'Unix socket path' },
-        'tcp://': { placeholder: 'localhost:3306', prefix: 'tcp://', hint: 'TCP service address (for databases, etc.)' },
-        'ssh://': { placeholder: 'localhost:22', prefix: 'ssh://', hint: 'SSH service address' },
-        'rdp://': { placeholder: 'localhost:3389', prefix: 'rdp://', hint: 'RDP (Remote Desktop Protocol) address' },
-        'unix+tls://': { placeholder: '/var/run/app.sock', prefix: 'unix+tls://', hint: 'Unix socket with TLS encryption' },
-        'smb://': { placeholder: '\\\\server\\share', prefix: 'smb://', hint: 'SMB/CIFS share path' },
-        'http_status:404': { placeholder: '', prefix: 'http_status:', hint: 'Return HTTP status code (e.g., 404, 503)' }
+        '': { placeholder: 'localhost:8080', prefix: '//', hint: state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)' },
+        'http://': { placeholder: 'localhost:8080', prefix: 'http://', hint: state.language === 'zh' ? 'HTTP 服务 URL' : 'HTTP service URL' },
+        'https://': { placeholder: 'localhost:8443', prefix: 'https://', hint: state.language === 'zh' ? 'HTTPS 服务 URL' : 'HTTPS service URL' },
+        'unix://': { placeholder: '/var/run/app.sock', prefix: 'unix://', hint: state.language === 'zh' ? 'Unix socket 路径' : 'Unix socket path' },
+        'tcp://': { placeholder: 'localhost:3306', prefix: 'tcp://', hint: state.language === 'zh' ? 'TCP 服务地址（用于数据库等）' : 'TCP service address (for databases, etc.)' },
+        'ssh://': { placeholder: 'localhost:22', prefix: 'ssh://', hint: state.language === 'zh' ? 'SSH 服务地址' : 'SSH service address' },
+        'rdp://': { placeholder: 'localhost:3389', prefix: 'rdp://', hint: state.language === 'zh' ? 'RDP（远程桌面协议）地址' : 'RDP (Remote Desktop Protocol) address' },
+        'unix+tls://': { placeholder: '/var/run/app.sock', prefix: 'unix+tls://', hint: state.language === 'zh' ? '带 TLS 加密的 Unix socket' : 'Unix socket with TLS encryption' },
+        'smb://': { placeholder: '\\\\server\\share', prefix: 'smb://', hint: state.language === 'zh' ? 'SMB/CIFS 共享路径' : 'SMB/CIFS share path' },
+        'http_status:404': { placeholder: '', prefix: 'http_status:', hint: state.language === 'zh' ? '返回 HTTP 状态码（例如：404, 503）' : 'Return HTTP status code (e.g., 404, 503)' }
     };
     
     const config = placeholders[selectedType] || placeholders[''];
@@ -940,7 +1113,7 @@ async function addHostname() {
     }
     
     if (!hostname || !serviceUrl) {
-        showToast('请填写完整信息', 'error');
+        showToast(state.language === 'zh' ? '请填写完整信息' : 'Please fill in all required fields', 'error');
         return;
     }
     
@@ -955,10 +1128,10 @@ async function addHostname() {
 async function editHostname(index) {
     const h = state.hostnames[index];
     
-    showModal('Edit published application', `
+    showModal(t('modal.editRoute'), `
         <div style="text-align: center; padding: 40px 20px;">
             <div class="loading-spinner"></div>
-            <p style="margin-top: 12px; color: var(--text-light);">正在加载域名列表...</p>
+            <p style="margin-top: 12px; color: var(--text-light);">${t('modal.loadingZones')}</p>
         </div>
     `, '');
     
@@ -975,21 +1148,21 @@ async function editHostname(index) {
     
     const zoneOptions = state.zones.map(z => `<option value="${z.id}" data-name="${z.name}" ${z.name === domain ? 'selected' : ''}>${z.name}</option>`).join('');
     
-    $('#modal-title').textContent = 'Edit published application';
+    $('#modal-title').textContent = t('modal.editRoute');
     $('#modal-body').innerHTML = `
         <form id="hostname-form">
             <div class="form-group">
-                <label>Hostname</label>
+                <label>${t('modal.hostname')}</label>
                 <div class="form-row">
                     <div style="flex: 1;">
                         <input type="text" id="subdomain" placeholder="e.g., www, blog, api" value="${subdomain}">
-                        <div class="form-hint">Subdomain (optional)</div>
+                        <div class="form-hint">${t('modal.subdomain')} (${t('modal.subdomain.optional')})</div>
                     </div>
                     <div style="flex: 1.5;">
                         <select id="zone-select" onchange="updateFullHostname()">
                             ${zoneOptions}
                         </select>
-                        <div class="form-hint">Domain *</div>
+                        <div class="form-hint">${t('modal.domain')} *</div>
                     </div>
                 </div>
             </div>
@@ -998,19 +1171,19 @@ async function editHostname(index) {
                 <span id="full-hostname-value">${h.hostname}</span>
             </div>
             <div class="form-group">
-                <label>Path (optional)</label>
+                <label>${t('modal.path')} (${t('modal.path.optional')})</label>
                 <input type="text" id="path-pattern" placeholder="^/blog" value="${h.path || ''}" oninput="updatePathHint()">
             </div>
             <div class="form-group">
-                <label>Service URL *</label>
+                <label>${t('modal.service')} URL *</label>
                 <input type="text" id="service" placeholder="https://localhost:8080" value="${h.service}" required>
-                <div class="form-hint">The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)</div>
+                <div class="form-hint">${state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)'}</div>
             </div>
         </form>
     `;
     $('#modal-footer').innerHTML = `
-        <button class="btn btn-secondary" onclick="hideModal()">Cancel</button>
-        <button class="btn btn-primary" onclick="saveHostnameEdit(${index})">Save</button>
+        <button class="btn btn-secondary" onclick="hideModal()">${t('modal.cancel')}</button>
+        <button class="btn btn-primary" onclick="saveHostnameEdit(${index})">${t('modal.save')}</button>
     `;
     
     setTimeout(() => {
@@ -1035,7 +1208,7 @@ async function saveHostnameEdit(index) {
     }
     
     if (!hostname || !service) {
-        showToast('请填写完整信息', 'error');
+        showToast(state.language === 'zh' ? '请填写完整信息' : 'Please fill in all required fields', 'error');
         return;
     }
     
@@ -1049,7 +1222,7 @@ async function saveHostnameEdit(index) {
 }
 
 async function deleteHostname(index) {
-    if (!confirm('确定要删除这个映射吗？')) return;
+    if (!confirm(t('toast.confirmDeleteRoute'))) return;
     state.hostnames.splice(index, 1);
     await saveHostnames();
 }
@@ -1058,10 +1231,10 @@ async function saveHostnames() {
     try {
         await API.put(`/api/tunnels/${state.currentTunnel.id}/hostnames`, { hostnames: state.hostnames });
         hideModal();
-        showToast('保存成功', 'success');
+        showToast(state.language === 'zh' ? '保存成功' : 'Saved successfully', 'success');
         await showTunnelDetail(state.currentTunnel.id);
     } catch (e) {
-        showToast('保存失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '保存失败: ' : 'Save failed: ') + e.message, 'error');
     }
 }
 
@@ -1071,9 +1244,9 @@ async function saveAccount() {
     
     try {
         await API.post('/api/account', { accountId, apiToken });
-        showToast('账号配置已保存', 'success');
+        showToast(state.language === 'zh' ? '账号配置已保存' : 'Account configuration saved', 'success');
     } catch (e) {
-        showToast('保存失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '保存失败: ' : 'Save failed: ') + e.message, 'error');
     }
 }
 
@@ -1082,7 +1255,7 @@ async function verifyAccount() {
     const apiToken = $('#api-token').value.trim();
     
     if (!accountId || !apiToken) {
-        showToast('请先填写 Account ID 和 API Token', 'error');
+        showToast(state.language === 'zh' ? '请先填写 Account ID 和 API Token' : 'Please fill in Account ID and API Token first', 'error');
         return;
     }
     
@@ -1091,14 +1264,14 @@ async function verifyAccount() {
         const data = await API.post('/api/account/verify');
         if (data.valid) {
             state.accountVerified = true;
-            showToast('验证成功', 'success');
+            showToast(state.language === 'zh' ? '验证成功' : 'Verification successful', 'success');
         } else {
             state.accountVerified = false;
-            showToast('验证失败: ' + (data.error || '无效的凭证'), 'error');
+            showToast((state.language === 'zh' ? '验证失败: ' : 'Verification failed: ') + (data.error || (state.language === 'zh' ? '无效的凭证' : 'Invalid credentials')), 'error');
         }
     } catch (e) {
         state.accountVerified = false;
-        showToast('验证失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '验证失败: ' : 'Verification failed: ') + e.message, 'error');
     }
 }
 
@@ -1114,7 +1287,7 @@ async function installCloudflared() {
     const cancelBtn = $('#btn-cancel-install');
     
     btn.disabled = true;
-    btn.textContent = '安装中...';
+    btn.textContent = state.language === 'zh' ? '安装中...' : 'Installing...';
     progressDiv.classList.remove('hidden');
     logDiv.innerHTML = '';
     
@@ -1136,19 +1309,19 @@ async function installCloudflared() {
     cancelBtn.onclick = () => {
         if (installController) {
             installController.abort();
-            addLog('用户取消安装', 'error');
-            updateProgress(0, '已取消');
+            addLog(state.language === 'zh' ? '用户取消安装' : 'User cancelled installation', 'error');
+            updateProgress(0, state.language === 'zh' ? '已取消' : 'Cancelled');
             setTimeout(() => {
                 progressDiv.classList.add('hidden');
                 btn.disabled = false;
-                btn.textContent = '自动安装';
+                btn.textContent = t('settings.version.install');
             }, 1500);
         }
     };
     
     try {
-        addLog('开始连接服务器...');
-        updateProgress(5, '正在连接...');
+        addLog(state.language === 'zh' ? '开始连接服务器...' : 'Connecting to server...');
+        updateProgress(5, state.language === 'zh' ? '正在连接...' : 'Connecting...');
         
         const response = await fetch('/api/cloudflared/install', {
             method: 'POST',
@@ -1176,24 +1349,24 @@ async function installCloudflared() {
                         
                         if (event.stage === 'error' || event.error) {
                             addLog(event.message || event.error, 'error');
-                            updateProgress(0, '安装失败');
+                            updateProgress(0, state.language === 'zh' ? '安装失败' : 'Installation failed');
                             setTimeout(() => {
                                 progressDiv.classList.add('hidden');
                                 btn.disabled = false;
-                                btn.textContent = '自动安装';
+                                btn.textContent = t('settings.version.install');
                             }, 2000);
                             return;
                         }
                         
                         if (event.stage === 'complete') {
-                            addLog(event.message || '安装完成', 'success');
-                            updateProgress(100, '安装成功');
-                            showToast(`安装成功: ${event.version}`, 'success');
+                            addLog(event.message || (state.language === 'zh' ? '安装完成' : 'Installation complete'), 'success');
+                            updateProgress(100, state.language === 'zh' ? '安装成功' : 'Installation successful');
+                            showToast(`${state.language === 'zh' ? '安装成功: ' : 'Installation successful: '}${event.version}`, 'success');
                             await loadCloudflaredVersion();
                             setTimeout(() => {
                                 progressDiv.classList.add('hidden');
                                 btn.disabled = false;
-                                btn.textContent = '自动安装';
+                                btn.textContent = t('settings.version.install');
                             }, 1500);
                             return;
                         }
@@ -1210,16 +1383,16 @@ async function installCloudflared() {
         
     } catch (e) {
         if (e.name === 'AbortError') {
-            addLog('安装已取消', 'error');
+            addLog(state.language === 'zh' ? '安装已取消' : 'Installation cancelled', 'error');
         } else {
-            addLog('安装失败: ' + e.message, 'error');
-            showToast('自动安装失败: ' + e.message, 'error');
+            addLog((state.language === 'zh' ? '安装失败: ' : 'Installation failed: ') + e.message, 'error');
+            showToast((state.language === 'zh' ? '自动安装失败: ' : 'Auto installation failed: ') + e.message, 'error');
         }
-        updateProgress(0, '安装失败');
+        updateProgress(0, state.language === 'zh' ? '安装失败' : 'Installation failed');
         setTimeout(() => {
             progressDiv.classList.add('hidden');
             btn.disabled = false;
-            btn.textContent = '自动安装';
+            btn.textContent = t('settings.version.install');
         }, 2000);
     }
 }
@@ -1228,12 +1401,12 @@ async function uploadCloudflared() {
     const fileInput = $('#cloudflared-upload');
     const file = fileInput.files[0];
     if (!file) {
-        showToast('请选择文件', 'error');
+        showToast(state.language === 'zh' ? '请选择文件' : 'Please select a file', 'error');
         return;
     }
     
     try {
-        showToast('正在上传...', '');
+        showToast(state.language === 'zh' ? '正在上传...' : 'Uploading...', '');
         const formData = new FormData();
         formData.append('file', file);
         
@@ -1244,13 +1417,13 @@ async function uploadCloudflared() {
         
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.error || '上传失败');
+            throw new Error(data.error || (state.language === 'zh' ? '上传失败' : 'Upload failed'));
         }
         
-        showToast('上传成功: ' + data.version, 'success');
+        showToast(`${state.language === 'zh' ? '上传成功: ' : 'Upload successful: '}${data.version}`, 'success');
         await loadCloudflaredVersion();
     } catch (e) {
-        showToast('上传失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '上传失败: ' : 'Upload failed: ') + e.message, 'error');
     }
 }
 
@@ -1260,11 +1433,11 @@ async function changePassword() {
     
     try {
         await API.post('/api/auth/change-password', { oldPassword, newPassword });
-        showToast('密码已修改', 'success');
+        showToast(state.language === 'zh' ? '密码已修改' : 'Password changed', 'success');
         $('#old-password').value = '';
         $('#new-password').value = '';
     } catch (e) {
-        showToast('修改失败: ' + e.message, 'error');
+        showToast((state.language === 'zh' ? '修改失败: ' : 'Change failed: ') + e.message, 'error');
     }
 }
 
@@ -1343,12 +1516,192 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function renderApp() {
     document.title = t('app.title');
+    document.querySelector('html').lang = state.language === 'zh' ? 'zh-CN' : 'en';
     
-    const loginSubtitle = document.querySelector('#login-page p');
-    if (loginSubtitle) loginSubtitle.textContent = t('app.subtitle');
+    // Login page
+    const loginPage = document.querySelector('#login-page');
+    if (loginPage) {
+        const h1 = loginPage.querySelector('h1');
+        if (h1) h1.textContent = 'Cloudflare Tunnel';
+        const p = loginPage.querySelector('p');
+        if (p) p.textContent = t('app.subtitle');
+        const label = loginPage.querySelector('label');
+        if (label) label.textContent = t('login.password');
+        const input = loginPage.querySelector('#login-password');
+        if (input) input.placeholder = t('login.placeholder');
+        const btn = loginPage.querySelector('button[type="submit"]');
+        if (btn) btn.textContent = t('login.button');
+    }
     
-    const setupSubtitle = document.querySelector('#setup-page p');
-    if (setupSubtitle) setupSubtitle.textContent = t('setup.subtitle');
+    // Setup page
+    const setupPage = document.querySelector('#setup-page');
+    if (setupPage) {
+        const h1 = setupPage.querySelector('h1');
+        if (h1) h1.textContent = t('setup.title');
+        const p = setupPage.querySelector('p');
+        if (p) p.textContent = t('setup.subtitle');
+        const labels = setupPage.querySelectorAll('label');
+        if (labels[0]) labels[0].textContent = t('setup.password');
+        if (labels[1]) labels[1].textContent = t('setup.confirm');
+        const inputs = setupPage.querySelectorAll('input');
+        if (inputs[0]) inputs[0].placeholder = t('setup.password.placeholder');
+        if (inputs[1]) inputs[1].placeholder = t('setup.confirm.placeholder');
+        const btn = setupPage.querySelector('button[type="submit"]');
+        if (btn) btn.textContent = t('setup.button');
+    }
+    
+    // Header buttons
+    const btnSettings = document.querySelector('#btn-settings');
+    if (btnSettings) btnSettings.title = t('header.settings');
+    const btnLogout = document.querySelector('#btn-logout');
+    if (btnLogout) btnLogout.title = t('header.logout');
+    
+    // Tunnels view
+    const tunnelsView = document.querySelector('#tunnels-view');
+    if (tunnelsView) {
+        const h2 = tunnelsView.querySelector('h2');
+        if (h2) h2.textContent = t('tunnels.title');
+        const createBtn = tunnelsView.querySelector('#btn-create-tunnel');
+        if (createBtn) {
+            createBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg> ${t('tunnels.create')}`;
+        }
+    }
+    
+    // Tunnel detail view
+    const tunnelDetailView = document.querySelector('#tunnel-detail-view');
+    if (tunnelDetailView) {
+        const backBtn = tunnelDetailView.querySelector('#btn-back-tunnels');
+        if (backBtn) backBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+        </svg> ${t('tunnels.back')}`;
+        const h2 = tunnelDetailView.querySelector('#tunnel-detail-title');
+        if (h2 && !state.currentTunnel) h2.textContent = t('tunnel.detail');
+    }
+    
+    // Settings view
+    const settingsView = document.querySelector('#settings-view');
+    if (settingsView) {
+        const backBtn = settingsView.querySelector('#btn-back-main');
+        if (backBtn) backBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"/>
+        </svg> ${t('tunnels.back')}`;
+        const h2 = settingsView.querySelector('h2');
+        if (h2) h2.textContent = t('settings.title');
+        
+        // Cloudflare config section
+        const cfSection = settingsView.querySelectorAll('.settings-section')[0];
+        if (cfSection) {
+            const h3 = cfSection.querySelector('h3');
+            if (h3) h3.textContent = t('settings.cf.config');
+            const guideBtn = cfSection.querySelector('#btn-show-cf-guide');
+            if (guideBtn) {
+                guideBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg> ${t('settings.cf.guide')}`;
+            }
+            const desc = cfSection.querySelector('.settings-desc');
+            if (desc) desc.textContent = t('settings.cf.desc');
+            const labels = cfSection.querySelectorAll('label');
+            if (labels[0]) labels[0].textContent = t('settings.cf.accountId');
+            if (labels[1]) labels[1].textContent = t('settings.cf.apiToken');
+            const accountIdInput = cfSection.querySelector('#account-id');
+            if (accountIdInput) accountIdInput.placeholder = state.language === 'zh' ? '在 Cloudflare 控制台右侧获取' : 'Get from Cloudflare Dashboard';
+            const apiTokenInput = cfSection.querySelector('#api-token');
+            if (apiTokenInput) apiTokenInput.placeholder = t('settings.cf.apiToken.placeholder');
+            const verifyBtn = cfSection.querySelector('#btn-verify-account');
+            if (verifyBtn) verifyBtn.textContent = t('settings.cf.verify');
+            const saveBtn = cfSection.querySelector('#account-form button[type="submit"]');
+            if (saveBtn) saveBtn.textContent = t('settings.cf.save');
+        }
+        
+        // Version section
+        const versionSection = settingsView.querySelectorAll('.settings-section')[1];
+        if (versionSection) {
+            const h3 = versionSection.querySelector('h3');
+            if (h3) h3.textContent = t('settings.version.title');
+            const installBtn = versionSection.querySelector('#btn-install-cloudflared');
+            if (installBtn) installBtn.textContent = t('settings.version.install');
+            const uploadSpan = versionSection.querySelectorAll('.version-info')[1];
+            if (uploadSpan) {
+                const span = uploadSpan.querySelector('span');
+                if (span) span.textContent = t('settings.version.manualUpload') + ':';
+            }
+            const uploadBtn = versionSection.querySelector('#btn-upload-cloudflared');
+            if (uploadBtn) uploadBtn.textContent = t('settings.version.upload');
+            
+            // Status badge
+            const statusBadge = versionSection.querySelector('#cloudflared-status-badge');
+            if (statusBadge) {
+                const isInstalled = !statusBadge.classList.contains('status-badge-error');
+                statusBadge.textContent = isInstalled ? t('settings.version.installed') : t('settings.version.notInstalled');
+            }
+            
+            // Install progress section
+            const installStatus = versionSection.querySelector('#install-status');
+            if (installStatus) installStatus.textContent = t('settings.version.preparing');
+            const cancelBtn = versionSection.querySelector('#btn-cancel-install');
+            if (cancelBtn) cancelBtn.textContent = t('settings.version.cancelInstall');
+            
+            // Help text
+            const helpDiv = versionSection.querySelector('div[style*="background: #f5f5f5"]');
+            if (helpDiv) {
+                const strong = helpDiv.querySelector('strong');
+                if (strong) strong.textContent = state.language === 'zh' ? '无法联网？' : 'Cannot connect to internet?';
+                const link = helpDiv.querySelector('a');
+                if (link) link.textContent = state.language === 'zh' ? 'Cloudflare 官方 GitHub' : 'Cloudflare Official GitHub';
+                const helpText = helpDiv.querySelector('div[style*="color: #666"]');
+                if (helpText) {
+                    const systemLabel = helpText.childNodes[0];
+                    if (systemLabel) systemLabel.textContent = state.language === 'zh' ? '当前系统: ' : 'Current System: ';
+                }
+                const systemArch = versionSection.querySelector('#system-arch');
+                if (systemArch && systemArch.textContent.includes('检测')) {
+                    systemArch.textContent = state.language === 'zh' ? '检测中...' : 'Detecting...';
+                }
+            }
+        }
+        
+        // Language section
+        const languageSection = settingsView.querySelectorAll('.settings-section')[2];
+        if (languageSection) {
+            const h3 = languageSection.querySelector('h3');
+            if (h3) h3.textContent = t('settings.language');
+        }
+        
+        // Password section
+        const passwordSection = settingsView.querySelectorAll('.settings-section')[3];
+        if (passwordSection) {
+            const h3 = passwordSection.querySelector('h3');
+            if (h3) h3.textContent = t('settings.password.change');
+            const labels = passwordSection.querySelectorAll('label');
+            if (labels[0]) labels[0].textContent = t('settings.password.current');
+            if (labels[1]) labels[1].textContent = t('settings.password.new');
+            const submitBtn = passwordSection.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.textContent = t('settings.password.submit');
+        }
+        
+        // Logout section
+        const logoutSection = settingsView.querySelectorAll('.settings-section')[4];
+        if (logoutSection) {
+            const h3 = logoutSection.querySelector('h3');
+            if (h3) h3.textContent = t('settings.logout.title');
+            const p = logoutSection.querySelector('p');
+            if (p) p.textContent = t('settings.logout.desc');
+            const logoutBtn = logoutSection.querySelector('#btn-logout-settings');
+            if (logoutBtn) {
+                logoutBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg> ${t('settings.logout.button')}`;
+            }
+        }
+    }
     
     $('#settings-language-title').textContent = t('settings.language');
     

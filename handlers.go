@@ -492,6 +492,7 @@ func (h *Handler) GetTunnelConnectors(w http.ResponseWriter, r *http.Request) {
 	for i, c := range connectors {
 		result[i] = map[string]interface{}{
 			"id":                 c.ID,
+			"hostname":           c.Hostname,
 			"clientID":           c.ClientID,
 			"version":            c.ClientVersion,
 			"coloName":           c.ColoName,
