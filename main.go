@@ -64,6 +64,7 @@ func main() {
 	mux.Handle("GET /api/tunnels/{id}/status", authMgr.Middleware(http.HandlerFunc(handler.TunnelStatus)))
 	mux.Handle("GET /api/tunnels/{id}/logs", authMgr.Middleware(http.HandlerFunc(handler.TunnelLogs)))
 	mux.Handle("DELETE /api/tunnels/{id}/logs", authMgr.Middleware(http.HandlerFunc(handler.ClearTunnelLogs)))
+	mux.Handle("GET /api/tunnels/{id}/connectors", authMgr.Middleware(http.HandlerFunc(handler.GetTunnelConnectors)))
 	
 	mux.Handle("GET /api/tunnels/active", authMgr.Middleware(http.HandlerFunc(handler.GetActiveTunnel)))
 	mux.Handle("POST /api/tunnels/{id}/activate", authMgr.Middleware(http.HandlerFunc(handler.ActivateTunnel)))

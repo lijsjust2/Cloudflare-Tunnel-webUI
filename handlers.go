@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"runtime"
 	"time"
@@ -250,6 +251,19 @@ func (h *Handler) ListTunnels(w http.ResponseWriter, r *http.Request) {
 			running, pid = h.process.Status(localTunnel.ID)
 			autoStart = localTunnel.AutoStart
 			hostnames = localTunnel.Hostnames
+		} else {
+			remoteConfig, _ := api.GetTunnelConfig(t.ID)
+			if remoteConfig != nil {
+				for _, rule := range remoteConfig.Ingress {
+					if rule.Hostname != "" {
+						hostnames = append(hostnames, HostnameConfig{
+							ID:       generateID(),
+							Hostname: rule.Hostname,
+							Service:  rule.Service,
+						})
+					}
+				}
+			}
 		}
 		result[i] = map[string]interface{}{
 			"id":          tunnelId,
@@ -331,16 +345,40 @@ func (h *Handler) DeleteTunnel(w http.ResponseWriter, r *http.Request) {
 	h.process.Stop(id)
 
 	tunnel, _ := h.config.GetTunnel(id)
-	if tunnel != nil && tunnel.TunnelID != "" {
-		api, err := h.getAPI(r)
-		if err == nil && api != nil {
-			api.DeleteTunnel(tunnel.TunnelID)
-		}
+	if tunnel == nil {
+		tunnel, _ = h.config.GetTunnelByTunnelID(id)
 	}
 
-	if err := h.config.DeleteTunnel(id); err != nil {
+	api, err := h.getAPI(r)
+	if err != nil {
 		jsonError(w, 500, err.Error())
 		return
+	}
+	
+	if tunnel != nil && tunnel.TunnelID != "" {
+		if api != nil {
+			if err := api.CleanupTunnelConnections(tunnel.TunnelID); err != nil {
+				log.Printf("Warning: failed to cleanup tunnel connections: %v", err)
+			}
+			if err := api.DeleteTunnel(tunnel.TunnelID); err != nil {
+				jsonError(w, 500, "Cloudflare 删除失败: "+err.Error())
+				return
+			}
+		}
+		h.config.DeleteTunnel(tunnel.ID)
+	} else {
+		if api == nil {
+			jsonError(w, 400, "account not configured")
+			return
+		}
+
+		if err := api.CleanupTunnelConnections(id); err != nil {
+			log.Printf("Warning: failed to cleanup tunnel connections: %v", err)
+		}
+		if err := api.DeleteTunnel(id); err != nil {
+			jsonError(w, 500, "Cloudflare 删除失败: "+err.Error())
+			return
+		}
 	}
 
 	jsonResponse(w, 200, map[string]string{"status": "deleted"})
@@ -349,23 +387,59 @@ func (h *Handler) DeleteTunnel(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetTunnel(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 
-	tunnel, err := h.config.GetTunnel(id)
-	if err != nil {
-		jsonError(w, 500, err.Error())
-		return
+	tunnel, _ := h.config.GetTunnel(id)
+	if tunnel == nil {
+		tunnel, _ = h.config.GetTunnelByTunnelID(id)
 	}
+
+	api, _ := h.getAPI(r)
+	
+	if tunnel == nil && api != nil {
+		remoteTunnel, err := api.GetTunnel(id)
+		if err != nil {
+			jsonError(w, 404, "tunnel not found")
+			return
+		}
+		if remoteTunnel != nil {
+			remoteConfig, _ := api.GetTunnelConfig(remoteTunnel.ID)
+			var hostnames []HostnameConfig
+			if remoteConfig != nil {
+				for _, rule := range remoteConfig.Ingress {
+					if rule.Hostname != "" {
+						hostnames = append(hostnames, HostnameConfig{
+							ID:       generateID(),
+							Hostname: rule.Hostname,
+							Service:  rule.Service,
+						})
+					}
+				}
+			}
+			result := map[string]interface{}{
+				"id":          remoteTunnel.ID,
+				"name":        remoteTunnel.Name,
+				"tunnelId":    remoteTunnel.ID,
+				"status":      remoteTunnel.Status,
+				"connections": remoteTunnel.Connections,
+				"createdAt":   remoteTunnel.CreatedAt,
+				"running":     false,
+				"hostnames":   hostnames,
+			}
+			jsonResponse(w, 200, result)
+			return
+		}
+	}
+
 	if tunnel == nil {
 		jsonError(w, 404, "tunnel not found")
 		return
 	}
 
-	api, _ := h.getAPI(r)
 	var remoteTunnel *Tunnel
 	if api != nil && tunnel.TunnelID != "" {
 		remoteTunnel, _ = api.GetTunnel(tunnel.TunnelID)
 	}
 
-	running, pid := h.process.Status(id)
+	running, pid := h.process.Status(tunnel.ID)
 
 	result := map[string]interface{}{
 		"id":        tunnel.ID,
@@ -389,6 +463,50 @@ func (h *Handler) GetTunnel(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, 200, result)
 }
 
+func (h *Handler) GetTunnelConnectors(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	tunnel, _ := h.config.GetTunnel(id)
+	if tunnel == nil {
+		tunnel, _ = h.config.GetTunnelByTunnelID(id)
+	}
+
+	api, err := h.getAPI(r)
+	if err != nil {
+		jsonError(w, 500, err.Error())
+		return
+	}
+	
+	tunnelID := id
+	if tunnel != nil && tunnel.TunnelID != "" {
+		tunnelID = tunnel.TunnelID
+	}
+
+	connectors, err := api.GetTunnelConnectors(tunnelID)
+	if err != nil {
+		jsonError(w, 500, err.Error())
+		return
+	}
+
+	result := make([]map[string]interface{}, len(connectors))
+	for i, c := range connectors {
+		result[i] = map[string]interface{}{
+			"id":                 c.ID,
+			"clientID":           c.ClientID,
+			"version":            c.ClientVersion,
+			"coloName":           c.ColoName,
+			"originIP":           c.OriginIP,
+			"platform":           c.Platform,
+			"openedAt":           c.OpenedAt,
+			"isPending":          c.IsPendingReconnect,
+		}
+	}
+
+	jsonResponse(w, 200, map[string]interface{}{
+		"connectors": result,
+	})
+}
+
 func (h *Handler) UpdateTunnel(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	var cfg TunnelConfig
@@ -408,14 +526,47 @@ func (h *Handler) UpdateTunnel(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) UpdateHostnames(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 
-	tunnel, err := h.config.GetTunnel(id)
-	if err != nil {
-		jsonError(w, 500, err.Error())
-		return
-	}
+	tunnel, _ := h.config.GetTunnel(id)
 	if tunnel == nil {
-		jsonError(w, 404, "tunnel not found")
-		return
+		tunnel, _ = h.config.GetTunnelByTunnelID(id)
+	}
+	
+	if tunnel == nil {
+		api, err := h.getAPI(r)
+		if err != nil {
+			jsonError(w, 500, err.Error())
+			return
+		}
+		if api == nil {
+			jsonError(w, 400, "account not configured")
+			return
+		}
+		
+		remoteTunnel, err := api.GetTunnel(id)
+		if err != nil {
+			jsonError(w, 500, err.Error())
+			return
+		}
+		if remoteTunnel == nil {
+			jsonError(w, 404, "tunnel not found")
+			return
+		}
+		
+		token, err := api.GetTunnelToken(id)
+		if err != nil {
+			jsonError(w, 500, "failed to get token: "+err.Error())
+			return
+		}
+		
+		newTunnel := TunnelConfig{
+			ID:       generateID(),
+			Name:     remoteTunnel.Name,
+			TunnelID: remoteTunnel.ID,
+			Token:    token,
+			AutoStart: false,
+		}
+		h.config.UpsertTunnel(newTunnel)
+		tunnel = &newTunnel
 	}
 
 	var body struct {
@@ -465,14 +616,48 @@ func (h *Handler) UpdateHostnames(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) StartTunnel(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	tunnel, err := h.config.GetTunnel(id)
-	if err != nil {
-		jsonError(w, 500, err.Error())
-		return
-	}
+	
+	tunnel, _ := h.config.GetTunnel(id)
 	if tunnel == nil {
-		jsonError(w, 404, "tunnel not found")
-		return
+		tunnel, _ = h.config.GetTunnelByTunnelID(id)
+	}
+	
+	if tunnel == nil {
+		api, err := h.getAPI(r)
+		if err != nil {
+			jsonError(w, 500, err.Error())
+			return
+		}
+		if api == nil {
+			jsonError(w, 400, "account not configured")
+			return
+		}
+		
+		remoteTunnel, err := api.GetTunnel(id)
+		if err != nil {
+			jsonError(w, 500, err.Error())
+			return
+		}
+		if remoteTunnel == nil {
+			jsonError(w, 404, "tunnel not found")
+			return
+		}
+		
+		token, err := api.GetTunnelToken(id)
+		if err != nil {
+			jsonError(w, 500, "failed to get token: "+err.Error())
+			return
+		}
+		
+		newTunnel := TunnelConfig{
+			ID:       generateID(),
+			Name:     remoteTunnel.Name,
+			TunnelID: remoteTunnel.ID,
+			Token:    token,
+			AutoStart: false,
+		}
+		h.config.UpsertTunnel(newTunnel)
+		tunnel = &newTunnel
 	}
 
 	if tunnel.Token == "" {
@@ -495,17 +680,28 @@ func (h *Handler) StartTunnel(w http.ResponseWriter, r *http.Request) {
 		h.config.UpdateTunnelToken(tunnel.TunnelID, token)
 	}
 
-	if err := h.process.Start(id, tunnel); err != nil {
+	if err := h.process.Start(tunnel.ID, tunnel); err != nil {
 		jsonError(w, 500, err.Error())
 		return
 	}
 
-	jsonResponse(w, 200, map[string]string{"status": "started"})
+	jsonResponse(w, 200, map[string]string{"status": "started", "localId": tunnel.ID})
 }
 
 func (h *Handler) StopTunnel(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
-	if err := h.process.Stop(id); err != nil {
+	
+	tunnel, _ := h.config.GetTunnel(id)
+	if tunnel == nil {
+		tunnel, _ = h.config.GetTunnelByTunnelID(id)
+	}
+	
+	localId := id
+	if tunnel != nil {
+		localId = tunnel.ID
+	}
+	
+	if err := h.process.Stop(localId); err != nil {
 		jsonError(w, 500, err.Error())
 		return
 	}

@@ -217,6 +217,12 @@ func (api *CloudflareAPI) CreateTunnel(name string) (*CreateTunnelResponse, erro
 	return &result, nil
 }
 
+func (api *CloudflareAPI) CleanupTunnelConnections(tunnelID string) error {
+	path := fmt.Sprintf("/accounts/%s/cfd_tunnel/%s/connections", api.accountID, tunnelID)
+	_, err := api.request("DELETE", path, nil)
+	return err
+}
+
 func (api *CloudflareAPI) DeleteTunnel(tunnelID string) error {
 	path := fmt.Sprintf("/accounts/%s/cfd_tunnel/%s", api.accountID, tunnelID)
 	_, err := api.request("DELETE", path, nil)
@@ -306,4 +312,62 @@ func (api *CloudflareAPI) FindDNSRecordByName(zoneID, name string) (*DNSRecord, 
 		}
 	}
 	return nil, nil
+}
+
+type Connector struct {
+	ID               string `json:"id"`
+	ClientID         string `json:"client_id"`
+	ClientVersion    string `json:"client_version"`
+	ColoName         string `json:"colo_name"`
+	OriginIP         string `json:"origin_ip"`
+	Platform         string `json:"platform"`
+	OpenedAt         string `json:"opened_at"`
+	IsPendingReconnect bool   `json:"is_pending_reconnect"`
+}
+
+func (api *CloudflareAPI) GetTunnelConnectors(tunnelID string) ([]Connector, error) {
+	path := fmt.Sprintf("/accounts/%s/cfd_tunnel/%s/connections", api.accountID, tunnelID)
+	resp, err := api.request("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var rawConnectors []map[string]interface{}
+	if err := json.Unmarshal(resp.Result, &rawConnectors); err != nil {
+		return nil, fmt.Errorf("failed to parse connectors: %v", err)
+	}
+
+	connectors := make([]Connector, len(rawConnectors))
+	for i, raw := range rawConnectors {
+		connectors[i] = Connector{
+			ID:                getString(raw, "id"),
+			ClientID:          getString(raw, "client_id"),
+			ClientVersion:     getString(raw, "client_version"),
+			ColoName:          getString(raw, "colo_name"),
+			OriginIP:          getString(raw, "origin_ip"),
+			Platform:          getString(raw, "platform"),
+			OpenedAt:          getString(raw, "opened_at"),
+			IsPendingReconnect: getBool(raw, "is_pending_reconnect"),
+		}
+	}
+	
+	return connectors, nil
+}
+
+func getString(m map[string]interface{}, key string) string {
+	if v, ok := m[key]; ok {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
+}
+
+func getBool(m map[string]interface{}, key string) bool {
+	if v, ok := m[key]; ok {
+		if b, ok := v.(bool); ok {
+			return b
+		}
+	}
+	return false
 }
