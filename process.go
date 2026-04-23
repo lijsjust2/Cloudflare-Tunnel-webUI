@@ -53,16 +53,16 @@ func (pm *ProcessManager) Start(id string, tunnel *TunnelConfig) error {
 	defer pm.mu.Unlock()
 
 	if info, ok := pm.processes[id]; ok && info.Running {
-		return fmt.Errorf("tunnel %s is already running", id)
+		return fmt.Errorf("隧道 %s 已在运行", id)
 	}
 
 	cloudflaredPath := pm.cloudflaredPath()
 	if _, err := os.Stat(cloudflaredPath); err != nil {
-		return fmt.Errorf("cloudflared binary not found, please install cloudflared first")
+		return fmt.Errorf("未找到 cloudflared 程序，请先安装 cloudflared")
 	}
 
 	if tunnel.Token == "" {
-		return fmt.Errorf("tunnel token is required")
+		return fmt.Errorf("隧道 token 是必需的")
 	}
 
 	return pm.startWithToken(id, tunnel.Token)
@@ -72,7 +72,7 @@ func (pm *ProcessManager) startWithToken(id string, token string) error {
 	logFile := pm.logPath(id)
 	lf, err := os.OpenFile(logFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC|os.O_SYNC, 0644)
 	if err != nil {
-		return fmt.Errorf("failed to create log file: %v", err)
+		return fmt.Errorf("创建日志文件失败: %v", err)
 	}
 
 	cloudflaredPath := pm.cloudflaredPath()
@@ -82,7 +82,7 @@ func (pm *ProcessManager) startWithToken(id string, token string) error {
 
 	if err := cmd.Start(); err != nil {
 		lf.Close()
-		return fmt.Errorf("failed to start cloudflared: %v", err)
+		return fmt.Errorf("启动 cloudflared 失败: %v", err)
 	}
 
 	info := &ProcessInfo{
@@ -118,7 +118,7 @@ func (pm *ProcessManager) Stop(id string) error {
 	}
 
 	if err := info.Cmd.Process.Kill(); err != nil {
-		return fmt.Errorf("failed to stop cloudflared: %v", err)
+		return fmt.Errorf("停止 cloudflared 失败: %v", err)
 	}
 
 	info.Cmd.Wait()

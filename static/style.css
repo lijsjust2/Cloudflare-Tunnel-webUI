@@ -496,8 +496,15 @@ body {
 .form-hint {
     font-size: 12px;
     color: var(--text-light);
-    margin-top: -10px;
+    margin-top: 4px;
     margin-bottom: 12px;
+}
+
+/* 服务前缀标签样式 */
+#service-prefix {
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .checkbox-label {

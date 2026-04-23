@@ -998,18 +998,18 @@ async function showAddHostnameModal() {
                                 <option value="smb://">${t('service.smb')}</option>
                                 <option value="http_status:404">${t('service.status')}</option>
                             </select>
-                            <div class="mt-1.5 text-xs text-gray-500">${t('modal.type')} (${t('modal.type.required')})</div>
+                            <div class="text-xs text-gray-500 mt-1">${t('modal.type')} <span class="text-red-500">*</span></div>
                         </div>
-                        <div class="sm:col-span-2 relative">
+                        <div class="sm:col-span-2">
                             <div class="relative">
-                                <span id="service-prefix" class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium pointer-events-none select-none">//</span>
+                                <span id="service-prefix" class="absolute left-0 top-0 h-full flex items-center px-3 text-gray-400 bg-gray-50 border-r border-gray-300 rounded-l-lg pointer-events-none select-none" style="min-width: 50px;">://</span>
                                 <input type="text" id="service" placeholder="localhost:8080" required
-                                    class="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none">
+                                    class="w-full pl-16 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none">
                             </div>
-                            <div class="mt-1.5 text-xs text-gray-500">${t('modal.url')} (${t('modal.url.required')})</div>
+                            <div class="text-xs text-gray-500 mt-1">${t('modal.url')} <span class="text-red-500">*</span></div>
                         </div>
                     </div>
-                    <div id="service-hint" class="mt-2 text-xs text-gray-500">
+                    <div class="text-xs text-gray-500 mt-2">
                         ${state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)'}
                     </div>
                 </div>
@@ -1033,29 +1033,27 @@ function updateServicePlaceholder() {
     const typeSelect = $('#service-type');
     const serviceInput = $('#service');
     const prefixSpan = $('#service-prefix');
-    const hintDiv = $('#service-hint');
     
     if (!typeSelect || !serviceInput) return;
     
     const selectedType = typeSelect.value;
     
     const placeholders = {
-        '': { placeholder: 'localhost:8080', prefix: '//', hint: state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)' },
-        'http://': { placeholder: 'localhost:8080', prefix: 'http://', hint: state.language === 'zh' ? 'HTTP 服务 URL' : 'HTTP service URL' },
-        'https://': { placeholder: 'localhost:8443', prefix: 'https://', hint: state.language === 'zh' ? 'HTTPS 服务 URL' : 'HTTPS service URL' },
-        'unix://': { placeholder: '/var/run/app.sock', prefix: 'unix://', hint: state.language === 'zh' ? 'Unix socket 路径' : 'Unix socket path' },
-        'tcp://': { placeholder: 'localhost:3306', prefix: 'tcp://', hint: state.language === 'zh' ? 'TCP 服务地址（用于数据库等）' : 'TCP service address (for databases, etc.)' },
-        'ssh://': { placeholder: 'localhost:22', prefix: 'ssh://', hint: state.language === 'zh' ? 'SSH 服务地址' : 'SSH service address' },
-        'rdp://': { placeholder: 'localhost:3389', prefix: 'rdp://', hint: state.language === 'zh' ? 'RDP（远程桌面协议）地址' : 'RDP (Remote Desktop Protocol) address' },
-        'unix+tls://': { placeholder: '/var/run/app.sock', prefix: 'unix+tls://', hint: state.language === 'zh' ? '带 TLS 加密的 Unix socket' : 'Unix socket with TLS encryption' },
-        'smb://': { placeholder: '\\\\server\\share', prefix: 'smb://', hint: state.language === 'zh' ? 'SMB/CIFS 共享路径' : 'SMB/CIFS share path' },
-        'http_status:404': { placeholder: '', prefix: 'http_status:', hint: state.language === 'zh' ? '返回 HTTP 状态码（例如：404, 503）' : 'Return HTTP status code (e.g., 404, 503)' }
+        '': { placeholder: 'localhost:8080', prefix: '://' },
+        'http://': { placeholder: 'localhost:8080', prefix: '://' },
+        'https://': { placeholder: 'localhost:8443', prefix: '://' },
+        'unix://': { placeholder: '/var/run/app.sock', prefix: ':/' },
+        'tcp://': { placeholder: 'localhost:3306', prefix: '://' },
+        'ssh://': { placeholder: 'localhost:22', prefix: '://' },
+        'rdp://': { placeholder: 'localhost:3389', prefix: '://' },
+        'unix+tls://': { placeholder: '/var/run/app.sock', prefix: ':/' },
+        'smb://': { placeholder: '\\\\server\\share', prefix: '://' },
+        'http_status:404': { placeholder: '404', prefix: ':' }
     };
     
     const config = placeholders[selectedType] || placeholders[''];
     serviceInput.placeholder = config.placeholder;
     prefixSpan.textContent = config.prefix;
-    hintDiv.textContent = config.hint;
 }
 
 function updateFullHostname() {
@@ -1148,6 +1146,27 @@ async function editHostname(index) {
     
     const zoneOptions = state.zones.map(z => `<option value="${z.id}" data-name="${z.name}" ${z.name === domain ? 'selected' : ''}>${z.name}</option>`).join('');
     
+    // 解析服务 URL
+    let serviceType = '';
+    let serviceUrl = h.service || '';
+    
+    const servicePrefixes = ['http://', 'https://', 'unix://', 'tcp://', 'ssh://', 'rdp://', 'unix+tls://', 'smb://'];
+    for (const prefix of servicePrefixes) {
+        if (serviceUrl.startsWith(prefix)) {
+            serviceType = prefix;
+            serviceUrl = serviceUrl.substring(prefix.length);
+            break;
+        }
+    }
+    
+    // 如果是 http_status:404，保留完整值
+    if (h.service === 'http_status:404') {
+        serviceType = 'http_status:404';
+        serviceUrl = '';
+    }
+    
+    const selectedTypeOption = (val) => serviceType === val ? 'selected' : '';
+    
     $('#modal-title').textContent = t('modal.editRoute');
     $('#modal-body').innerHTML = `
         <form id="hostname-form">
@@ -1175,9 +1194,36 @@ async function editHostname(index) {
                 <input type="text" id="path-pattern" placeholder="^/blog" value="${h.path || ''}" oninput="updatePathHint()">
             </div>
             <div class="form-group">
-                <label>${t('modal.service')} URL *</label>
-                <input type="text" id="service" placeholder="https://localhost:8080" value="${h.service}" required>
-                <div class="form-hint">${state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)'}</div>
+                <label>${t('modal.service')} *</label>
+                <div class="form-row">
+                    <div style="flex: 0 0 140px;">
+                        <select id="service-type" onchange="updateServicePlaceholder()"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 outline-none bg-white">
+                            <option value="" ${selectedTypeOption('')}>${t('service.select')}</option>
+                            <option value="http://" ${selectedTypeOption('http://')}>${t('service.http')}</option>
+                            <option value="https://" ${selectedTypeOption('https://')}>${t('service.https')}</option>
+                            <option value="unix://" ${selectedTypeOption('unix://')}>${t('service.unix')}</option>
+                            <option value="tcp://" ${selectedTypeOption('tcp://')}>${t('service.tcp')}</option>
+                            <option value="ssh://" ${selectedTypeOption('ssh://')}>${t('service.ssh')}</option>
+                            <option value="rdp://" ${selectedTypeOption('rdp://')}>${t('service.rdp')}</option>
+                            <option value="unix+tls://" ${selectedTypeOption('unix+tls://')}>${t('service.unixtls')}</option>
+                            <option value="smb://" ${selectedTypeOption('smb://')}>${t('service.smb')}</option>
+                            <option value="http_status:404" ${selectedTypeOption('http_status:404')}>${t('service.status')}</option>
+                        </select>
+                        <div class="text-xs text-gray-500 mt-1">${t('modal.type')} <span style="color: var(--danger);">*</span></div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="relative">
+                            <span id="service-prefix" class="absolute left-0 top-0 h-full flex items-center px-3 text-gray-400 bg-gray-50 border-r border-gray-300 pointer-events-none select-none" style="min-width: 50px; line-height: 42px; border-radius: 6px 0 0 6px;">://</span>
+                            <input type="text" id="service" placeholder="localhost:8080" value="${serviceUrl}" required
+                                style="padding-left: 60px; width: 100%; padding: 10px 12px 10px 60px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">${t('modal.url')} <span style="color: var(--danger);">*</span></div>
+                    </div>
+                </div>
+                <div class="text-xs text-gray-500 mt-2">
+                    ${state.language === 'zh' ? '路由流量的源服务（例如：https://localhost:8080、tcp://localhost:3306）' : 'The origin service to route traffic to (e.g., https://localhost:8080, tcp://localhost:3306)'}
+                </div>
             </div>
         </form>
     `;
@@ -1191,6 +1237,8 @@ async function editHostname(index) {
         const zoneSelect = $('#zone-select');
         if (subInput) subInput.addEventListener('input', updateFullHostname);
         if (zoneSelect) zoneSelect.addEventListener('change', updateFullHostname);
+        // 初始化服务类型选择器
+        updateServicePlaceholder();
     }, 100);
 }
 

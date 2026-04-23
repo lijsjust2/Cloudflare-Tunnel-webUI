@@ -168,7 +168,7 @@ func (h *Handler) VerifyAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if api == nil {
-		jsonError(w, 400, "account not configured")
+		jsonError(w, 400, "账号未配置")
 		return
 	}
 
@@ -187,7 +187,7 @@ func (h *Handler) ListZones(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if api == nil {
-		jsonError(w, 400, "account not configured")
+		jsonError(w, 400, "账号未配置")
 		return
 	}
 
@@ -303,7 +303,7 @@ func (h *Handler) CreateTunnel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if api == nil {
-		jsonError(w, 400, "account not configured")
+		jsonError(w, 400, "账号未配置")
 		return
 	}
 
@@ -368,7 +368,7 @@ func (h *Handler) DeleteTunnel(w http.ResponseWriter, r *http.Request) {
 		h.config.DeleteTunnel(tunnel.ID)
 	} else {
 		if api == nil {
-			jsonError(w, 400, "account not configured")
+			jsonError(w, 400, "账号未配置")
 			return
 		}
 
@@ -397,7 +397,7 @@ func (h *Handler) GetTunnel(w http.ResponseWriter, r *http.Request) {
 	if tunnel == nil && api != nil {
 		remoteTunnel, err := api.GetTunnel(id)
 		if err != nil {
-			jsonError(w, 404, "tunnel not found")
+			jsonError(w, 404, "隧道不存在")
 			return
 		}
 		if remoteTunnel != nil {
@@ -430,7 +430,7 @@ func (h *Handler) GetTunnel(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if tunnel == nil {
-		jsonError(w, 404, "tunnel not found")
+		jsonError(w, 404, "隧道不存在")
 		return
 	}
 
@@ -539,7 +539,7 @@ func (h *Handler) UpdateHostnames(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if api == nil {
-			jsonError(w, 400, "account not configured")
+			jsonError(w, 400, "账号未配置")
 			return
 		}
 		
@@ -549,13 +549,13 @@ func (h *Handler) UpdateHostnames(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if remoteTunnel == nil {
-			jsonError(w, 404, "tunnel not found")
+			jsonError(w, 404, "隧道不存在")
 			return
 		}
 		
 		token, err := api.GetTunnelToken(id)
 		if err != nil {
-			jsonError(w, 500, "failed to get token: "+err.Error())
+			jsonError(w, 500, "获取 token 失败: "+err.Error())
 			return
 		}
 		
@@ -584,7 +584,7 @@ func (h *Handler) UpdateHostnames(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if api == nil {
-		jsonError(w, 400, "account not configured")
+		jsonError(w, 400, "账号未配置")
 		return
 	}
 
@@ -630,7 +630,7 @@ func (h *Handler) StartTunnel(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if api == nil {
-			jsonError(w, 400, "account not configured")
+			jsonError(w, 400, "账号未配置")
 			return
 		}
 		
@@ -640,13 +640,13 @@ func (h *Handler) StartTunnel(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if remoteTunnel == nil {
-			jsonError(w, 404, "tunnel not found")
+			jsonError(w, 404, "隧道不存在")
 			return
 		}
 		
 		token, err := api.GetTunnelToken(id)
 		if err != nil {
-			jsonError(w, 500, "failed to get token: "+err.Error())
+			jsonError(w, 500, "获取 token 失败: "+err.Error())
 			return
 		}
 		
@@ -668,7 +668,7 @@ func (h *Handler) StartTunnel(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if api == nil {
-			jsonError(w, 400, "account not configured")
+			jsonError(w, 400, "账号未配置")
 			return
 		}
 
@@ -717,7 +717,7 @@ func (h *Handler) RestartTunnel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if tunnel == nil {
-		jsonError(w, 404, "tunnel not found")
+		jsonError(w, 404, "隧道不存在")
 		return
 	}
 
@@ -894,7 +894,7 @@ func (h *Handler) GetActiveTunnel(w http.ResponseWriter, r *http.Request) {
 	}
 	tunnel, err := h.config.GetTunnel(activeID)
 	if err != nil {
-		jsonError(w, 404, "tunnel not found")
+		jsonError(w, 404, "隧道不存在")
 		return
 	}
 	running, pid := h.process.Status(tunnel.ID)

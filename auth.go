@@ -42,7 +42,7 @@ func (am *AuthManager) IsSetup() bool {
 
 func (am *AuthManager) Setup(password string) error {
 	if am.IsSetup() {
-		return fmt.Errorf("password already configured")
+		return fmt.Errorf("密码已设置")
 	}
 
 	salt := make([]byte, 16)
@@ -82,7 +82,7 @@ func (am *AuthManager) Verify(password string) bool {
 
 func (am *AuthManager) ChangePassword(oldPassword, newPassword string) error {
 	if !am.Verify(oldPassword) {
-		return fmt.Errorf("invalid old password")
+		return fmt.Errorf("旧密码错误")
 	}
 
 	salt := make([]byte, 16)
@@ -143,7 +143,7 @@ func (am *AuthManager) Middleware(next http.Handler) http.Handler {
 		}
 
 		if !am.ValidateSession(token) {
-			http.Error(w, `{"error":"unauthorized"}`, http.StatusUnauthorized)
+			http.Error(w, `{"error":"未授权访问"}`, http.StatusUnauthorized)
 			return
 		}
 

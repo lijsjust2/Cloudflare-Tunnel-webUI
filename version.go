@@ -85,13 +85,13 @@ func cloudflaredBinaryName() string {
 func (vm *VersionManager) GetCurrentVersion() (string, error) {
 	cloudflaredPath := vm.cloudflaredPath()
 	if _, err := os.Stat(cloudflaredPath); err != nil {
-		return "", fmt.Errorf("cloudflared not installed")
+		return "", fmt.Errorf("cloudflared 未安装")
 	}
 
 	cmd := exec.Command(cloudflaredPath, "--version")
 	out, err := cmd.Output()
 	if err != nil {
-		return "", fmt.Errorf("failed to get version: %v", err)
+		return "", fmt.Errorf("获取版本失败: %v", err)
 	}
 
 	version := strings.TrimSpace(string(out))
@@ -106,17 +106,17 @@ func (vm *VersionManager) GetLatestRelease() (*GithubRelease, error) {
 	client := &http.Client{Timeout: 30 * time.Second}
 	resp, err := client.Get("https://api.github.com/repos/cloudflare/cloudflared/releases/latest")
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch from GitHub: %v (可能需要翻墙或手动下载)", err)
+		return nil, fmt.Errorf("从 GitHub 获取信息失败: %v (可能需要翻墙或手动下载)", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("GitHub API returned status %d", resp.StatusCode)
+		return nil, fmt.Errorf("GitHub API 返回状态码 %d", resp.StatusCode)
 	}
 
 	var release GithubRelease
 	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
-		return nil, fmt.Errorf("failed to parse response: %v", err)
+		return nil, fmt.Errorf("解析响应失败: %v", err)
 	}
 
 	return &release, nil
@@ -185,7 +185,7 @@ func (vm *VersionManager) InstallFromGitHubWithProgress(progressCb ProgressCallb
 	}
 
 	if downloadURL == "" {
-		err := fmt.Errorf("no matching asset found for %s/%s (looking for %s)", runtime.GOOS, runtime.GOARCH, pattern)
+		err := fmt.Errorf("未找到适合 %s/%s 的资源 (查找模式: %s)", runtime.GOOS, runtime.GOARCH, pattern)
 		progressCb("error", err.Error(), 0)
 		return "", err
 	}
@@ -197,12 +197,12 @@ func (vm *VersionManager) InstallFromGitHubWithProgress(progressCb ProgressCallb
 	resp, err := client.Get(downloadURL)
 	if err != nil {
 		progressCb("error", fmt.Sprintf("下载失败: %v (请手动下载: %s)", err, downloadURL), 0)
-		return "", fmt.Errorf("download failed: %v (请手动下载: %s)", err, downloadURL)
+		return "", fmt.Errorf("下载失败: %v (请手动下载: %s)", err, downloadURL)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		err := fmt.Errorf("download returned status %d", resp.StatusCode)
+		err := fmt.Errorf("下载返回状态码 %d", resp.StatusCode)
 		progressCb("error", err.Error(), 0)
 		return "", err
 	}
@@ -251,7 +251,7 @@ func (vm *VersionManager) InstallFromGitHubWithProgress(progressCb ProgressCallb
 			}
 			f.Close()
 			progressCb("error", "下载中断: "+err.Error(), 0)
-			return "", fmt.Errorf("download incomplete: %v", err)
+			return "", fmt.Errorf("下载不完整: %v", err)
 		}
 	}
 	f.Close()
@@ -310,7 +310,7 @@ func (vm *VersionManager) InstallFromUpload(reader io.Reader) (string, error) {
 		if err := vm.extractFromZip(tmpFile, dst); err != nil {
 			if err := os.Rename(tmpFile, dst); err != nil {
 				os.Remove(tmpFile)
-				return "", fmt.Errorf("failed to extract cloudflared")
+				return "", fmt.Errorf("解压 cloudflared 失败")
 			}
 		}
 	}
@@ -341,7 +341,7 @@ func (vm *VersionManager) extractFromTarGz(archivePath, dst string) error {
 
 	gzr, err := gzip.NewReader(f)
 	if err != nil {
-		return fmt.Errorf("gzip open failed: %v", err)
+		return fmt.Errorf("gzip 打开失败: %v", err)
 	}
 	defer gzr.Close()
 
@@ -354,7 +354,7 @@ func (vm *VersionManager) extractFromTarGz(archivePath, dst string) error {
 			break
 		}
 		if err != nil {
-			return fmt.Errorf("tar read error: %v", err)
+			return fmt.Errorf("tar 读取错误: %v", err)
 		}
 
 		name := filepath.Base(header.Name)
@@ -375,7 +375,7 @@ func (vm *VersionManager) extractFromTarGz(archivePath, dst string) error {
 		}
 	}
 
-	return fmt.Errorf("cloudflared binary not found in tar.gz archive")
+	return fmt.Errorf("在 tar.gz 压缩包中未找到 cloudflared 程序")
 }
 
 func (vm *VersionManager) extractFromZip(archivePath, dst string) error {
@@ -412,7 +412,7 @@ func (vm *VersionManager) extractFromZip(archivePath, dst string) error {
 		}
 	}
 
-	return fmt.Errorf("cloudflared binary not found in zip archive")
+	return fmt.Errorf("在 zip 压缩包中未找到 cloudflared 程序")
 }
 
 func (vm *VersionManager) IsInstalled() bool {

@@ -6,6 +6,24 @@
 ![Go](https://img.shields.io/badge/Go-1.22+-00ADD8)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+## 界面截图
+
+### 隧道列表
+
+![隧道列表](images/1.png)
+
+### 添加域名映射
+
+![添加域名映射](images/2.png)
+
+### 编辑域名映射
+
+![编辑域名映射](images/3.png)
+
+### 设置页面
+
+![设置页面](images/4.png)
+
 ## 功能特性
 
 - 🌐 **Web 管理界面** - 直观的可视化操作界面

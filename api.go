@@ -116,7 +116,7 @@ func (api *CloudflareAPI) request(method, path string, body interface{}) (*APIRe
 	if body != nil {
 		b, err := json.Marshal(body)
 		if err != nil {
-			return nil, fmt.Errorf("failed to marshal request body: %v", err)
+			return nil, fmt.Errorf("请求体序列化失败: %v", err)
 		}
 		reqBody = bytes.NewReader(b)
 	}
@@ -124,7 +124,7 @@ func (api *CloudflareAPI) request(method, path string, body interface{}) (*APIRe
 	url := fmt.Sprintf("https://api.cloudflare.com/client/v4%s", path)
 	req, err := http.NewRequest(method, url, reqBody)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %v", err)
+		return nil, fmt.Errorf("创建请求失败: %v", err)
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", api.apiToken))
@@ -132,20 +132,20 @@ func (api *CloudflareAPI) request(method, path string, body interface{}) (*APIRe
 
 	resp, err := api.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("request failed: %v", err)
+		return nil, fmt.Errorf("请求失败: %v", err)
 	}
 	defer resp.Body.Close()
 
 	var apiResp APIResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %v", err)
+		return nil, fmt.Errorf("响应解码失败: %v", err)
 	}
 
 	if !apiResp.Success {
 		if len(apiResp.Errors) > 0 {
-			return nil, fmt.Errorf("API error: %s", apiResp.Errors[0].Message)
+			return nil, fmt.Errorf("API 错误: %s", apiResp.Errors[0].Message)
 		}
-		return nil, fmt.Errorf("API request failed")
+		return nil, fmt.Errorf("API 请求失败")
 	}
 
 	return &apiResp, nil
@@ -167,7 +167,7 @@ func (api *CloudflareAPI) ListZones() ([]Zone, error) {
 
 	var zones []Zone
 	if err := json.Unmarshal(resp.Result, &zones); err != nil {
-		return nil, fmt.Errorf("failed to parse zones: %v", err)
+		return nil, fmt.Errorf("解析域名列表失败: %v", err)
 	}
 	return zones, nil
 }
@@ -181,7 +181,7 @@ func (api *CloudflareAPI) ListTunnels() ([]Tunnel, error) {
 
 	var tunnels []Tunnel
 	if err := json.Unmarshal(resp.Result, &tunnels); err != nil {
-		return nil, fmt.Errorf("failed to parse tunnels: %v", err)
+		return nil, fmt.Errorf("解析隧道列表失败: %v", err)
 	}
 	return tunnels, nil
 }
@@ -195,7 +195,7 @@ func (api *CloudflareAPI) GetTunnel(tunnelID string) (*Tunnel, error) {
 
 	var tunnel Tunnel
 	if err := json.Unmarshal(resp.Result, &tunnel); err != nil {
-		return nil, fmt.Errorf("failed to parse tunnel: %v", err)
+		return nil, fmt.Errorf("解析隧道信息失败: %v", err)
 	}
 	return &tunnel, nil
 }
@@ -213,7 +213,7 @@ func (api *CloudflareAPI) CreateTunnel(name string) (*CreateTunnelResponse, erro
 
 	var result CreateTunnelResponse
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return nil, fmt.Errorf("failed to parse tunnel response: %v", err)
+		return nil, fmt.Errorf("解析隧道响应失败: %v", err)
 	}
 	return &result, nil
 }
@@ -239,7 +239,7 @@ func (api *CloudflareAPI) GetTunnelToken(tunnelID string) (string, error) {
 
 	var token string
 	if err := json.Unmarshal(resp.Result, &token); err != nil {
-		return "", fmt.Errorf("failed to parse token: %v", err)
+		return "", fmt.Errorf("解析 token 失败: %v", err)
 	}
 	return token, nil
 }
@@ -255,7 +255,7 @@ func (api *CloudflareAPI) GetTunnelConfig(tunnelID string) (*TunnelIngressConfig
 		Config TunnelIngressConfig `json:"config"`
 	}
 	if err := json.Unmarshal(resp.Result, &wrapper); err != nil {
-		return nil, fmt.Errorf("failed to parse tunnel config: %v", err)
+		return nil, fmt.Errorf("解析隧道配置失败: %v", err)
 	}
 	return &wrapper.Config, nil
 }
@@ -277,7 +277,7 @@ func (api *CloudflareAPI) CreateDNSRecord(zoneID string, record *DNSRecord) (*DN
 
 	var result DNSRecord
 	if err := json.Unmarshal(resp.Result, &result); err != nil {
-		return nil, fmt.Errorf("failed to parse DNS record: %v", err)
+		return nil, fmt.Errorf("解析 DNS 记录失败: %v", err)
 	}
 	return &result, nil
 }
@@ -291,7 +291,7 @@ func (api *CloudflareAPI) ListDNSRecords(zoneID string) ([]DNSRecord, error) {
 
 	var records []DNSRecord
 	if err := json.Unmarshal(resp.Result, &records); err != nil {
-		return nil, fmt.Errorf("failed to parse DNS records: %v", err)
+		return nil, fmt.Errorf("解析 DNS 记录列表失败: %v", err)
 	}
 	return records, nil
 }
@@ -336,7 +336,7 @@ func (api *CloudflareAPI) GetTunnelConnectors(tunnelID string) ([]Connector, err
 
 	var rawConnectors []map[string]interface{}
 	if err := json.Unmarshal(resp.Result, &rawConnectors); err != nil {
-		return nil, fmt.Errorf("failed to parse connectors: %v", err)
+		return nil, fmt.Errorf("解析连接器列表失败: %v", err)
 	}
 
 	// 按机器级别返回，每个 connector 一行
